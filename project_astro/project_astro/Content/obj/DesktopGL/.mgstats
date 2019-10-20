@@ -1,0 +1,4 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"D:/Documents/~Projects/project_astro/project_astro/project_astro/Content/../../../Content/Sprites/Test sprites/CharaSpriteSheet.png","D:/Documents/~Projects/project_astro/project_astro/project_astro/Content/bin/DesktopGL/CharaSpriteSheet.xnb","TextureProcessor","Texture2DContent",176,7157,0.3900429
+"D:/Documents/~Projects/project_astro/project_astro/project_astro/Content/../../../Content/Sprites/Test sprites/DebugDrawBox.png","D:/Documents/~Projects/project_astro/project_astro/project_astro/Content/bin/DesktopGL/DebugDrawBox.xnb","TextureProcessor","Texture2DContent",195,40085,0.0196514
+"D:/Documents/~Projects/project_astro/project_astro/project_astro/Content/../../../Content/Sprites/Test sprites/TestSprite.png","D:/Documents/~Projects/project_astro/project_astro/project_astro/Content/bin/DesktopGL/TestSprite.xnb","TextureProcessor","Texture2DContent",225,2133,0.0104811
