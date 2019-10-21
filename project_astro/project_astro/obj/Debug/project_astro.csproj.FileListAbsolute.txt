@@ -19,3 +19,4 @@ D:\Documents\~Projects\project_astro\project_astro\project_astro\obj\Debug\proje
 D:\Documents\~Projects\project_astro\project_astro\project_astro\obj\Debug\project_astro.csproj.CopyComplete
 D:\Documents\~Projects\project_astro\project_astro\project_astro\obj\Debug\project_astro.exe
 D:\Documents\~Projects\project_astro\project_astro\project_astro\obj\Debug\project_astro.pdb
+D:\Documents\~Projects\project_astro\project_astro\project_astro\bin\DesktopGL\AnyCPU\Debug\Content\BulletTestSprite.xnb

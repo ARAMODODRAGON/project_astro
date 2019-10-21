@@ -1,11 +1,12 @@
 ﻿using System;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
 namespace project_astro {
 	///the bullets enum
 	enum BulletType {
 		None = 0,
-		Directional,
+		Basic,
 	}
 
 	///creates shortcuts for objects using the BulletManager class
@@ -158,48 +159,88 @@ namespace project_astro {
 
 		#endregion
 
+		#region Bullet Textures
+
+		private Texture2D bulletDefault;
+
+		#endregion
+
 		#region Initialization
 
 		public void Init() {
-			//set singleton
+			// set singleton
 			if (singleton == null) singleton = this;
 
 			bulletIntData = new int[SIZE, 2];
 			bulletFloatData = new float[SIZE, 6];
+
+			// init all bullets to 0(BulletType.None)
+			for (Index = 0; Index < SIZE; ++Index) Type = 0;
 		}
 
 		public void LoadContent() {
-
+			bulletDefault = ContentLoader.Load<Texture2D>("BulletTestSprite");
 		}
 
 		#endregion
 
+		// TODO: write all math functions
 		#region Math
 
-		// TODO: write all math functions
-
-		private static float AngleToX(float angle) {
+		private float AngleToX(float angle) {
 			return (float)-Math.Sin(angle);
 		}
 
-		private static float AngleToY(float angle) {
+		private float AngleToY(float angle) {
 			return (float)-Math.Cos(angle);
 		}
-
 
 		#endregion
 
 		#region Bullet Logic
 
+		private bool IsOutsideBounds() {
+			return XPos > 600 || XPos < 0 || YPos > 800 || YPos < 0;
+		}
+
 		private void DestroyBullet(int index) {
+			// simply by setting the type to 0 (BulletType.None) the bullet is destroyed
 			bulletIntData[index, 0] = 0;
 		}
 
 		private void DestroyBullet() {
-
+			// simply by setting the type to 0 (BulletType.None) the bullet is destroyed
+			Type = 0;
 		}
 
 		public void Update(float delta) {
+			for (Index = 0; Index < SIZE; ++Index) {
+				TimeSinceStart += delta;
+
+				// update each bullet according to type
+				switch ((BulletType)Type) {
+					case BulletType.None: break; /// type of none shouldn't update
+					case BulletType.Basic:
+						/// basic bullet requires simple physics
+						XPos += AngleToX(Direction) * Speed;
+						YPos += AngleToY(Direction) * Speed;
+						break;
+					default: Debug.Log("Couldn't update bullet type: " + (BulletType)Type); break;
+				}
+
+				// test if bullet should die
+				switch ((BulletType)Type) {
+					case BulletType.None: break; /// type of none shouldn't update
+					case BulletType.Basic:
+						if (IsOutsideBounds()) DestroyBullet();
+						break;
+					default: break;
+				}
+			}
+		}
+
+		// TODO: write functionality and add player argument
+		public void CollideAgainstPlayer() {
 
 		}
 
@@ -208,7 +249,19 @@ namespace project_astro {
 		#region Rendering Bullets
 
 		public void Render() {
-
+			// render each bullet
+			for (Index = 0; Index < SIZE; ++Index) {
+				switch ((BulletType)Type) {
+					case BulletType.None: break;
+					case BulletType.Basic:
+						Renderer.Draw(bulletDefault,
+							new Rectangle((int)XPos - bulletDefault.Width / 2, (int)YPos - bulletDefault.Height / 2,
+								bulletDefault.Width, bulletDefault.Height),
+							Color.White);
+						break;
+					default: Debug.Log("Couldn't render bullet type: " + (BulletType)Type); break;
+				}
+			}
 		}
 
 		#endregion

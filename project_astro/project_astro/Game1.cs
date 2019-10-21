@@ -7,11 +7,14 @@ namespace project_astro {
 	public class Game1 : Game {
 		public static Game1 singleton { get; private set; }
 
-		//rendering
+		// rendering
 		public GraphicsDeviceManager graphics;
 		public SpriteBatch spriteBatch;
 
-		//debug 
+		// the world
+		TheWorld theWorld;
+
+		// debug 
 		Debug debug;
 
 		public Game1() {
@@ -19,16 +22,17 @@ namespace project_astro {
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			debug = new Debug();
+			theWorld = new TheWorld();
 		}
 
 		protected override void Initialize() {
-			//set viewport
+			// set viewport
 			GraphicsDevice.Viewport = new Viewport(-340, 0, 940, 100);
 			graphics.PreferredBackBufferWidth = 600;
 			graphics.PreferredBackBufferHeight = 800;
 			graphics.ApplyChanges();
 
-			//call base
+			// call base
 			base.Initialize();
 		}
 
@@ -52,13 +56,13 @@ namespace project_astro {
 		}
 
 		protected override void Draw(GameTime gameTime) {
-			//start drawing
+			// Start drawing
 			GraphicsDevice.Clear(new Color(0.5f, 0.5f, 0.5f, 1f));
 			Renderer.RenderBegin();
 
 
 
-			//stop drawing
+			// Stop drawing
 			Renderer.RenderEnd();
 			base.Draw(gameTime);
 		}
