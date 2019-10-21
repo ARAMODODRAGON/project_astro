@@ -40,6 +40,8 @@ namespace project_astro {
 		public void Exit() {
 			// remove singleton
 			if (singleton == this) singleton = null;
+
+			if (level != null) level.Exit();
 		}
 	}
 }

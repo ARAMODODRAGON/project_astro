@@ -43,7 +43,7 @@ namespace project_astro {
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			// the world
+			// load the world
 			theWorld.LoadContent();
 		}
 
@@ -55,6 +55,7 @@ namespace project_astro {
 			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
 				Exit();
 
+			// update the world
 			theWorld.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
 			base.Update(gameTime);
@@ -70,6 +71,13 @@ namespace project_astro {
 			// Stop drawing
 			Renderer.RenderEnd();
 			base.Draw(gameTime);
+		}
+
+		protected override void EndRun() {
+			// end the world
+			theWorld.Exit();
+
+			base.EndRun();
 		}
 	}
 }
