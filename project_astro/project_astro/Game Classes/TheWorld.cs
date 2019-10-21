@@ -17,15 +17,15 @@ namespace project_astro {
 		}
 
 		public void LoadContent() {
-
+			bulletManager.LoadContent();
 		}
 
 		public void Update(float delta) {
-
+			bulletManager.Update(delta);
 		}
 
 		public void Render() {
-
+			bulletManager.Render();
 		}
 
 		public void Exit() {

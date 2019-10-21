@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Game Classes\BulletManager.cs" />
     <Compile Include="Game Classes\EnemyManager.cs" />
+    <Compile Include="Game Classes\Helper Classes\ContentLoader.cs" />
     <Compile Include="Game Classes\TheWorld.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Game Classes\Helper Classes\Debug.cs" />

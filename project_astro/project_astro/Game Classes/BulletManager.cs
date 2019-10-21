@@ -249,15 +249,19 @@ namespace project_astro {
 		#region Rendering Bullets
 
 		public void Render() {
+			Rectangle rect = new Rectangle();
 			// render each bullet
 			for (Index = 0; Index < SIZE; ++Index) {
 				switch ((BulletType)Type) {
 					case BulletType.None: break;
 					case BulletType.Basic:
-						Renderer.Draw(bulletDefault,
-							new Rectangle((int)XPos - bulletDefault.Width / 2, (int)YPos - bulletDefault.Height / 2,
-								bulletDefault.Width, bulletDefault.Height),
-							Color.White);
+						//set the rect
+						rect.X = (int)XPos - bulletDefault.Width / 2;
+						rect.Y = (int)YPos - bulletDefault.Height / 2;
+						rect.Width = bulletDefault.Width;
+						rect.Height = bulletDefault.Height;
+						//draw the basic bullet using the 'bulletDefault' Texture2D
+						Renderer.Draw(bulletDefault, rect, Color.White);
 						break;
 					default: Debug.Log("Couldn't render bullet type: " + (BulletType)Type); break;
 				}
