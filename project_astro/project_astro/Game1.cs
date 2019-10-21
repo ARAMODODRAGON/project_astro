@@ -27,7 +27,7 @@ namespace project_astro {
 
 		protected override void Initialize() {
 			// set viewport
-			GraphicsDevice.Viewport = new Viewport(-340, 0, 940, 100);
+			GraphicsDevice.Viewport = new Viewport(-100, 0, 600, 900);
 			graphics.PreferredBackBufferWidth = 600;
 			graphics.PreferredBackBufferHeight = 800;
 			graphics.ApplyChanges();
@@ -45,6 +45,8 @@ namespace project_astro {
 
 			// load the world
 			theWorld.LoadContent();
+
+			debug.LoadContent();
 		}
 
 		protected override void UnloadContent() {
@@ -67,6 +69,7 @@ namespace project_astro {
 			Renderer.RenderBegin();
 
 			theWorld.Render();
+			debug.Render();
 
 			// Stop drawing
 			Renderer.RenderEnd();

@@ -3,10 +3,33 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
 namespace project_astro {
+	//contains all bullet related math
+	static class BMath {
+		
+		public static float AngleToX(float angle) {
+			return (float)-Math.Sin(angle * Math.PI / 180f);
+		}
+
+		public static float AngleToY(float angle) {
+			return (float)Math.Cos(angle * Math.PI / 180f);
+		}
+
+		public static float XToWorld(float x) {
+			return x / 100f * 600f;
+		}
+
+		public static float YToWorld(float y) {
+			return y / 150f * 900f;
+		}
+
+	}
+
 	///the bullets enum
 	enum BulletType {
 		None = 0,
 		Basic,
+		Basic_Red,
+		Basic_blue,
 	}
 
 	///creates shortcuts for objects using the BulletManager class
@@ -14,18 +37,6 @@ namespace project_astro {
 		private static int SIZE => BulletManager.SIZE;
 		private static ref int[,] bulletIntData => ref BulletManager.singleton.bulletIntData;
 		private static ref float[,] bulletFloatData => ref BulletManager.singleton.bulletFloatData;
-
-		#region Bullet Data & Math
-
-		private static float AngleToX(float angle) {
-			return (float)-Math.Sin(angle * Math.PI / 180f);
-		}
-
-		private static float AngleToY(float angle) {
-			return (float)Math.Cos(angle * Math.PI / 180f);
-		}
-
-		#endregion
 
 		#region Bullet Creation
 
@@ -51,6 +62,10 @@ namespace project_astro {
 		/// <param name="radius">The radius of the bullets collider</param>
 		/// <returns>Returns whether the bullet could spawn or not</returns>
 		public static bool SpawnSingle(BulletType type, float xpos, float ypos, float speed, float direction, float radius = 1f) {
+			// redo the positions
+			xpos = BMath.XToWorld(xpos);
+			ypos = BMath.YToWorld(ypos);
+
 			// first find an unused slot in the array
 			int index = 0;
 			while (index < SIZE && bulletIntData[index, 0] != 0) ++index; /// while index is valid and bullet type is 0 (BulletType.None)
@@ -86,6 +101,9 @@ namespace project_astro {
 			float anglediff = 360f / count;
 			float relangle;
 
+			xCenter = BMath.XToWorld(xCenter);
+			yCenter = BMath.YToWorld(yCenter);
+
 			// start looping through and creating each bullet
 			while (index < SIZE && spawnedCount != count) { /// while the index is valid and hasn't spawned all the bullets
 
@@ -96,8 +114,9 @@ namespace project_astro {
 					/// or for its rotation
 					relangle = anglediff * spawnedCount;
 					// spawn bullet
-					SpawnSingleAt(index, type, AngleToX(startingRotation + relangle) * circleRadius + xCenter,
-						AngleToY(startingRotation + relangle) * circleRadius + yCenter, speed, outDirection + relangle + startingRotation, bulletRadius);
+					SpawnSingleAt(index, type, BMath.XToWorld(BMath.AngleToX(startingRotation + relangle)) * circleRadius + xCenter,
+						BMath.YToWorld(BMath.AngleToY(startingRotation + relangle)) * circleRadius + yCenter, 
+						speed, outDirection + relangle + startingRotation, bulletRadius);
 					//increase the number of spawned bullets
 					++spawnedCount;
 				}
@@ -135,6 +154,9 @@ namespace project_astro {
 			int spawnedCount = 0;
 			float anglediff = range / count; // distance between bullets
 			float relangle;
+			
+			xCenter = BMath.XToWorld(xCenter);
+			yCenter = BMath.YToWorld(yCenter);
 
 			// start looping through and creating each bullet
 			while (index < SIZE && spawnedCount < count) { /// while the index is valid and hasn't spawned all the bullets
@@ -146,8 +168,8 @@ namespace project_astro {
 					/// and for its rotation
 					relangle = anglediff * spawnedCount;
 					// spawn bullet
-					SpawnSingleAt(index, type, AngleToX(rotation + relangle) * circleRadius + xCenter,
-						AngleToY(rotation + relangle) * circleRadius + yCenter, speed, outDirection + relangle + rotation, bulletRadius);
+					SpawnSingleAt(index, type, BMath.AngleToX(rotation + relangle) * circleRadius + xCenter,
+						BMath.AngleToY(rotation + relangle) * circleRadius + yCenter, speed, outDirection + relangle + rotation, bulletRadius);
 					//increase the number of spawned bullets
 					++spawnedCount;
 				}
@@ -176,7 +198,7 @@ namespace project_astro {
 		#region The Bullet List
 
 		// bullet list
-		public const int SIZE = 512;
+		public const int SIZE = 1024;
 		public int[,] bulletIntData;
 		//  [SIZE, 2]
 		/// [0] = type
@@ -198,6 +220,7 @@ namespace project_astro {
 		private ref int LastEnemy => ref bulletIntData[Index, 1];
 		private ref float TimeSinceStart => ref bulletFloatData[Index, 0];
 		private ref float Direction => ref bulletFloatData[Index, 1];
+		private  float DirectionInRad => bulletFloatData[Index, 1] * (float)Math.PI/180f;
 		private ref float Speed => ref bulletFloatData[Index, 2];
 		private ref float CircleRadius => ref bulletFloatData[Index, 3];
 		private ref float XPos => ref bulletFloatData[Index, 4];
@@ -237,23 +260,10 @@ namespace project_astro {
 
 		#endregion
 
-		// TODO: write all math functions
-		#region Math
-
-		private float AngleToX(float angle) {
-			return (float)-Math.Sin(angle * Math.PI / 180f);
-		}
-
-		private float AngleToY(float angle) {
-			return (float)Math.Cos(angle * Math.PI / 180f);
-		}
-
-		#endregion
-
 		#region Bullet Logic
 
 		private bool IsOutsideBounds() {
-			return XPos > 600 || XPos < 0 || YPos > 800 || YPos < 0;
+			return XPos > 675 || XPos < -75 || YPos > 875 || YPos < -7;
 		}
 
 		private void DestroyBullet(int index) {
@@ -275,9 +285,11 @@ namespace project_astro {
 					case BulletType.None: break; /// type of none shouldn't update
 					case BulletType.Basic:
 						/// basic bullet requires simple physics
-						XPos += AngleToX(Direction) * Speed * delta;
-						YPos += AngleToY(Direction) * Speed * delta;
+						XPos += BMath.AngleToX(Direction) * Speed * delta;
+						YPos += BMath.AngleToY(Direction) * Speed * delta;
 						break;
+					case BulletType.Basic_Red: goto case BulletType.Basic;
+					case BulletType.Basic_blue: goto case BulletType.Basic;
 					default: Debug.Log("Couldn't update bullet type: " + (BulletType)Type); break;
 				}
 
@@ -287,6 +299,8 @@ namespace project_astro {
 					case BulletType.Basic:
 						if (IsOutsideBounds()) DestroyBullet();
 						break;
+					case BulletType.Basic_Red: goto case BulletType.Basic;
+					case BulletType.Basic_blue: goto case BulletType.Basic;
 					default: break;
 				}
 			}
@@ -303,18 +317,37 @@ namespace project_astro {
 
 		public void Render() {
 			Rectangle rect = new Rectangle();
+			Vector2 origin = new Vector2(75f);
 			// render each bullet
 			for (Index = 0; Index < SIZE; ++Index) {
 				switch ((BulletType)Type) {
 					case BulletType.None: break;
 					case BulletType.Basic:
 						//set the rect
-						rect.X = (int)(XPos - CircleRadius);
-						rect.Y = (int)(YPos - CircleRadius);
+						rect.X = (int)(XPos);
+						rect.Y = (int)(YPos);
 						rect.Width = (int)CircleRadius;
 						rect.Height = (int)CircleRadius;
 						//draw the basic bullet using the 'bulletDefault' Texture2D
-						Renderer.Draw(bulletDefault, rect, Color.White);
+						Renderer.Draw(bulletDefault, rect, null, Color.White, DirectionInRad, origin, SpriteEffects.None, 0f);
+						break;
+					case BulletType.Basic_Red:
+						//set the rect
+						rect.X = (int)(XPos);
+						rect.Y = (int)(YPos);
+						rect.Width = (int)CircleRadius;
+						rect.Height = (int)CircleRadius;
+						//draw the basic bullet using the 'bulletDefault' Texture2D
+						Renderer.Draw(bulletDefault, rect, null, Color.Red, DirectionInRad, origin, SpriteEffects.None, 0f);
+						break;
+					case BulletType.Basic_blue:
+						//set the rect
+						rect.X = (int)(XPos);
+						rect.Y = (int)(YPos);
+						rect.Width = (int)CircleRadius;
+						rect.Height = (int)CircleRadius;
+						//draw the basic bullet using the 'bulletDefault' Texture2D
+						Renderer.Draw(bulletDefault, rect, null, Color.Blue, DirectionInRad, origin, SpriteEffects.None, 0f);
 						break;
 					default: Debug.Log("Couldn't render bullet type: " + (BulletType)Type); break;
 				}

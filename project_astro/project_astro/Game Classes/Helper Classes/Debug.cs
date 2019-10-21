@@ -32,8 +32,8 @@ namespace project_astro {
 			drawingEvents = new Queue<DrawEvent>();
 		}
 
-		public void LoadContent(ContentManager content) {
-			box = content.Load<Texture2D>("DebugDrawBox");
+		public void LoadContent() {
+			box = ContentLoader.Load<Texture2D>("DebugDrawBox");
 		}
 
 		public void Render() {
@@ -86,11 +86,19 @@ namespace project_astro {
 		}
 
 		public static void DrawBox(int Left, int Right, int Top, int Bottom, Color color, bool outlined = false) {
-			drawingEvents.Enqueue(new DrawEvent(Left, Right, Top, Bottom, color, outlined));
+			drawingEvents.Enqueue(new DrawEvent((int)(Left / 100f * 600f), 
+												(int)(Right/ 100f * 600f), 
+												(int)(Top/ 150f * 900f), 
+												(int)(Bottom/ 150f * 900f), 
+												color, outlined));
 		}
 
 		public static void DrawBox(int Left, int Right, int Top, int Bottom, bool outlined = false) {
-			drawingEvents.Enqueue(new DrawEvent(Left, Right, Top, Bottom, Color.White, outlined));
+			drawingEvents.Enqueue(new DrawEvent((int)(Left / 100f * 600f), 
+												(int)(Right/ 100f * 600f), 
+												(int)(Top/ 150f * 900f), 
+												(int)(Bottom/ 150f * 900f), 
+												Color.White, outlined));
 		}
 
 		public static void Log(object obj) {

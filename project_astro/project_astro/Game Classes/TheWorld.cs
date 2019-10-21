@@ -1,4 +1,5 @@
-﻿
+﻿using Microsoft.Xna.Framework;
+
 namespace project_astro {
 	class TheWorld {
 		// singleton
@@ -19,7 +20,7 @@ namespace project_astro {
 			bulletManager.Init();
 
 			/// test level
-			level = new Level1();
+			level = new TestLevelA();
 			level.Init();
 		}
 
@@ -31,6 +32,8 @@ namespace project_astro {
 		public void Update(float delta) {
 			bulletManager.Update(delta);
 			level.Update(delta);
+
+			Debug.DrawBox(49, 51, 150, 0, Color.Black);
 		}
 
 		public void Render() {

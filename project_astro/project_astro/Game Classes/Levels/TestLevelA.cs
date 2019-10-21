@@ -5,11 +5,13 @@ namespace project_astro {
 		private float timer1 = 0f;
 		private float timer2 = 0f;
 		private float timer3 = 0f;
+		private float timer4 = 0f;
 		private float angle1 = 0f;
 		private float angle2 = 0f;
 		private float angle3 = 0f;
+		private float angle4 = 0f;
 
-		private int state = 0;
+		private int state = 1;
 		private bool keystate = false;
 
 		public override void Init() {
@@ -23,7 +25,7 @@ namespace project_astro {
 		public override void Update(float delta) {
 			if (!keystate && Keyboard.GetState().IsKeyDown(Keys.Space)) {
 				state++;
-				if (state > 2) state = 0;
+				if (state > 3) state = 0;
 				Bullets.Clear();
 			}
 			keystate = Keyboard.GetState().IsKeyDown(Keys.Space);
@@ -34,8 +36,8 @@ namespace project_astro {
 
 					if (timer1 > 0.2f) {
 						timer1 -= 0.2f;
-						Bullets.SpawnSingle(BulletType.Basic, 300f, 400f, 80f, angle1, 20f);
-						Bullets.SpawnSingle(BulletType.Basic, 300f, 400f, 80f, -angle1 + 90f, 20f);
+						Bullets.SpawnSingle(BulletType.Basic, 50f, 50f, 80f, angle1 + 45f, 20f);
+						Bullets.SpawnSingle(BulletType.Basic, 50f, 50f, 80f, -angle1 - 45f, 20f);
 						angle1 += 20f;
 					}
 					break;
@@ -43,10 +45,10 @@ namespace project_astro {
 				case 1: {
 					timer2 += delta;
 
-					if (timer2 > 0.5f) {
-						timer2 -= 0.5f;
-						Bullets.SpawnCircle(BulletType.Basic, 300f, 400f, 10, 50f, 40f, angle2, 0f, 20f);
-						angle2 += 90f;
+					if (timer2 > 0.07f) {
+						timer2 -= 0.07f;
+						Bullets.SpawnCircle(BulletType.Basic, 50f, 50f, 10, 5f, 90f, angle2, 0f, 20f);
+						angle2 += 30f;
 					}
 					break;
 				}
@@ -55,9 +57,21 @@ namespace project_astro {
 
 					if (timer3 > 0.6f) {
 						timer3 -= 0.6f;
-						Bullets.SpawnRange(BulletType.Basic, 300f, 400f, 4, 20f, 60f, 90f, angle3, 0f, 20f);
+						Bullets.SpawnRange(BulletType.Basic_Red, 50f, 50f, 4, 5f, 60f, 90f, angle3, 0f, 20f);
 
 						angle3 += 45;
+					}
+
+					break;
+				}
+				case 3: {
+					timer4 += delta;
+
+					if (timer4 > 0.2f) {
+						timer4 -= 0.1f;
+						Bullets.SpawnSingle(BulletType.Basic_blue, 50f, 50f, 150f, angle4, 20f);
+
+						angle4 += 10f;
 					}
 
 					break;
