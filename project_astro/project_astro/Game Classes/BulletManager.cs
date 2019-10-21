@@ -10,7 +10,7 @@ namespace project_astro {
 	}
 
 	///creates shortcuts for objects using the BulletManager class
-	static class Bullet {
+	static class Bullets {
 		private static int SIZE => BulletManager.SIZE;
 		private static ref int[,] bulletIntData => ref BulletManager.singleton.bulletIntData;
 		private static ref float[,] bulletFloatData => ref BulletManager.singleton.bulletFloatData;
@@ -18,11 +18,11 @@ namespace project_astro {
 		#region Bullet Data & Math
 
 		private static float AngleToX(float angle) {
-			return (float)-Math.Sin(angle);
+			return (float)-Math.Sin(angle * Math.PI / 180f);
 		}
 
 		private static float AngleToY(float angle) {
-			return (float)-Math.Cos(angle);
+			return (float)Math.Cos(angle * Math.PI / 180f);
 		}
 
 		#endregion
@@ -80,11 +80,11 @@ namespace project_astro {
 		/// <param name="bulletRadius">The size of each bulllets collider</param>
 		/// <returns>Returns whether or not all bullets were spawned</returns>
 		public static bool SpawnCircle(BulletType type, float xCenter, float yCenter, int count, float circleRadius, float speed,
-								 float startingRotation, float outDirection = 0f, float bulletRadius = 1f) {
+									   float startingRotation, float outDirection = 0f, float bulletRadius = 1f) {
 			int index = 0;
 			int spawnedCount = 0;
 			float anglediff = 360f / count;
-			float relangle = 0f;
+			float relangle;
 
 			// start looping through and creating each bullet
 			while (index < SIZE && spawnedCount != count) { /// while the index is valid and hasn't spawned all the bullets
@@ -96,8 +96,8 @@ namespace project_astro {
 					/// or for its rotation
 					relangle = anglediff * spawnedCount;
 					// spawn bullet
-					SpawnSingleAt(index, type, AngleToX(startingRotation + relangle) * circleRadius,
-						AngleToY(startingRotation + relangle) * circleRadius, speed, outDirection + relangle, bulletRadius);
+					SpawnSingleAt(index, type, AngleToX(startingRotation + relangle) * circleRadius + xCenter,
+						AngleToY(startingRotation + relangle) * circleRadius + yCenter, speed, outDirection + relangle + startingRotation, bulletRadius);
 					//increase the number of spawned bullets
 					++spawnedCount;
 				}
@@ -115,7 +115,56 @@ namespace project_astro {
 			return true;
 		}
 
+		/// <summary>
+		/// Spawns the bullets in a range of a circle
+		/// </summary>
+		/// <param name="type">Type of bullet to spawn</param>
+		/// <param name="xCenter">Center of the circle</param>
+		/// <param name="yCenter">Center of the circle</param>
+		/// <param name="count">Number of bullets to spawn</param>
+		/// <param name="circleRadius">The radius of the circle</param>
+		/// <param name="speed">The initial speed of the bullets</param>
+		/// <param name="range">The the range which bullets will spawn</param>\
+		/// <param name="rotation">The initial rotation of the first bullet</param>
+		/// <param name="outDirection">The direction which the bullets will face relative to the position on the circle</param>
+		/// <param name="bulletRadius">The size of each bulllets collider</param>
+		/// <returns></returns>
+		public static bool SpawnRange(BulletType type, float xCenter, float yCenter, int count, float circleRadius, float speed, float range,
+									  float rotation, float outDirection = 0f, float bulletRadius = 0f) {
+			int index = 0;
+			int spawnedCount = 0;
+			float anglediff = range / count; // distance between bullets
+			float relangle;
+
+			// start looping through and creating each bullet
+			while (index < SIZE && spawnedCount < count) { /// while the index is valid and hasn't spawned all the bullets
+
+				// when there is an empty slot create a bullet
+				if (bulletIntData[index, 0] == 0) {
+					// set the relative angle of this bullet
+					/// used for the position on the circle
+					/// and for its rotation
+					relangle = anglediff * spawnedCount;
+					// spawn bullet
+					SpawnSingleAt(index, type, AngleToX(rotation + relangle) * circleRadius + xCenter,
+						AngleToY(rotation + relangle) * circleRadius + yCenter, speed, outDirection + relangle + rotation, bulletRadius);
+					//increase the number of spawned bullets
+					++spawnedCount;
+				}
+
+				// goto next index
+				++index;
+			}
+
+
+			return true;
+		}
+
 		#endregion
+
+		public static void Clear() {
+			BulletManager.singleton.ClearBullets();
+		}
 
 	}
 
@@ -127,7 +176,7 @@ namespace project_astro {
 		#region The Bullet List
 
 		// bullet list
-		public const int SIZE = 100;
+		public const int SIZE = 512;
 		public int[,] bulletIntData;
 		//  [SIZE, 2]
 		/// [0] = type
@@ -174,7 +223,11 @@ namespace project_astro {
 			bulletIntData = new int[SIZE, 2];
 			bulletFloatData = new float[SIZE, 6];
 
-			// init all bullets to 0(BulletType.None)
+			ClearBullets();
+		}
+
+		public void ClearBullets() {
+			// clears all bullets to 0(BulletType.None)
 			for (Index = 0; Index < SIZE; ++Index) Type = 0;
 		}
 
@@ -188,11 +241,11 @@ namespace project_astro {
 		#region Math
 
 		private float AngleToX(float angle) {
-			return (float)-Math.Sin(angle);
+			return (float)-Math.Sin(angle * Math.PI / 180f);
 		}
 
 		private float AngleToY(float angle) {
-			return (float)-Math.Cos(angle);
+			return (float)Math.Cos(angle * Math.PI / 180f);
 		}
 
 		#endregion
@@ -222,8 +275,8 @@ namespace project_astro {
 					case BulletType.None: break; /// type of none shouldn't update
 					case BulletType.Basic:
 						/// basic bullet requires simple physics
-						XPos += AngleToX(Direction) * Speed;
-						YPos += AngleToY(Direction) * Speed;
+						XPos += AngleToX(Direction) * Speed * delta;
+						YPos += AngleToY(Direction) * Speed * delta;
 						break;
 					default: Debug.Log("Couldn't update bullet type: " + (BulletType)Type); break;
 				}
@@ -256,10 +309,10 @@ namespace project_astro {
 					case BulletType.None: break;
 					case BulletType.Basic:
 						//set the rect
-						rect.X = (int)XPos - bulletDefault.Width / 2;
-						rect.Y = (int)YPos - bulletDefault.Height / 2;
-						rect.Width = bulletDefault.Width;
-						rect.Height = bulletDefault.Height;
+						rect.X = (int)(XPos - CircleRadius);
+						rect.Y = (int)(YPos - CircleRadius);
+						rect.Width = (int)CircleRadius;
+						rect.Height = (int)CircleRadius;
 						//draw the basic bullet using the 'bulletDefault' Texture2D
 						Renderer.Draw(bulletDefault, rect, Color.White);
 						break;

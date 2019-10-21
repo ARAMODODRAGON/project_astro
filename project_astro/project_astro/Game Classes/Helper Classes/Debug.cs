@@ -94,7 +94,7 @@ namespace project_astro {
 		}
 
 		public static void Log(object obj) {
-			Console.WriteLine(obj.ToString());
+			System.Diagnostics.Debug.WriteLine(obj.ToString());
 		}
 
 	}
