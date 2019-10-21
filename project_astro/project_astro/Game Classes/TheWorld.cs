@@ -19,7 +19,7 @@ namespace project_astro {
 			bulletManager.Init();
 
 			/// test level
-			level = new TestLevelA();
+			level = new Level1();
 			level.Init();
 		}
 

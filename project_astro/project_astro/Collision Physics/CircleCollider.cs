@@ -1,11 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Xna.Framework;
 
 namespace project_astro {
 	class CircleCollider : CollsionShape {
-		public float radius = 1f;
+		public float radius;
+
+		public CircleCollider() {
+			radius = 1f;
+			pivot = Vector2.Zero;
+		}
+
+		public CircleCollider(float radius) {
+			this.radius = radius;
+			pivot = Vector2.Zero;
+		}
 	}
 }
