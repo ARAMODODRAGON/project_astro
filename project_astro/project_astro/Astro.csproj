@@ -9,8 +9,8 @@
     <ProjectGuid>{1BC4D919-9F6A-45AD-8EEF-347A355ADE3D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>project_astro</RootNamespace>
-    <AssemblyName>project_astro</AssemblyName>
+    <RootNamespace>Astro</RootNamespace>
+    <AssemblyName>Astro</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -45,23 +45,24 @@
     <Compile Include="Physics\CircleCollider.cs" />
     <Compile Include="Physics\CollisionData.cs" />
     <Compile Include="Physics\CollsionShape.cs" />
-    <Compile Include="Game Classes\BulletManager.cs" />
-    <Compile Include="Game Classes\EnemyManager.cs" />
-    <Compile Include="Game Classes\Entity.cs" />
-    <Compile Include="Game Classes\Helper Classes\ContentLoader.cs" />
-    <Compile Include="Game Classes\Helper Classes\Viewport.cs" />
-    <Compile Include="Game Classes\Level.cs" />
-    <Compile Include="Game Classes\Levels\Level1.cs" />
-    <Compile Include="Game Classes\Levels\TestLevelA.cs" />
-    <Compile Include="Game Classes\Levels\TestLevelB.cs" />
+    <Compile Include="General Classes\BulletManager.cs" />
+    <Compile Include="General Classes\EnemyManager.cs" />
+    <Compile Include="Entities\Entity.cs" />
+    <Compile Include="General Classes\Helper Classes\ContentLoader.cs" />
+    <Compile Include="Rendering\Sprite.cs" />
+    <Compile Include="Rendering\Viewport.cs" />
+    <Compile Include="Levels\Level.cs" />
+    <Compile Include="Levels\Level1.cs" />
+    <Compile Include="Levels\TestLevelA.cs" />
+    <Compile Include="Levels\TestLevelB.cs" />
     <Compile Include="Physics\PhysicsTransform.cs" />
-    <Compile Include="Game Classes\Player.cs" />
-    <Compile Include="Game Classes\StateMachine.cs" />
-    <Compile Include="Game Classes\TheWorld.cs" />
+    <Compile Include="Entities\Player.cs" />
+    <Compile Include="General Classes\StateMachine.cs" />
+    <Compile Include="General Classes\TheWorld.cs" />
     <Compile Include="Physics\Transform.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="Game Classes\Helper Classes\Debug.cs" />
-    <Compile Include="Game Classes\Helper Classes\Renderer.cs" />
+    <Compile Include="General Classes\Helper Classes\Debug.cs" />
+    <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,0 +1,3 @@
+D:\Documents\~Projects\project_astro\project_astro\project_astro\obj\Debug\Astro.csprojAssemblyReference.cache
+D:\Documents\~Projects\project_astro\project_astro\project_astro\obj\Debug\project_astro.exe
+D:\Documents\~Projects\project_astro\project_astro\project_astro\obj\Debug\project_astro.pdb

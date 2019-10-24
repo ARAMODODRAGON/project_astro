@@ -74,7 +74,7 @@ namespace Astro.Objects {
 		}
 
 		public override void LoadContent() {
-			sprite = ContentLoader.Load<Texture2D>("TestSprite");
+			spriteTexture = ContentLoader.Load<Texture2D>("TestSprite");
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
