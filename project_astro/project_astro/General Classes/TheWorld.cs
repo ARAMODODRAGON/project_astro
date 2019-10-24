@@ -8,16 +8,15 @@ namespace Astro {
 		public static TheWorld singleton { get; private set; }
 
 		// main world objects
-		Level level;
-		BulletManager bulletManager;
-		Player player;
+		private Level level;
+		private BulletManager bulletManager;
+		private Player player;
 
 		public void Init() {
 			// set singleton
 			if (singleton == null) singleton = this;
 
 			// init the main world objects
-
 			/// player object
 			player = new Player();
 
@@ -31,6 +30,7 @@ namespace Astro {
 		}
 
 		public void LoadContent() {
+			player.LoadContent();
 			bulletManager.LoadContent();
 			level.LoadContent();
 		}
@@ -45,6 +45,8 @@ namespace Astro {
 		}
 
 		public void Render() {
+			// Render world objects
+			player.Render();
 			bulletManager.Render();
 		}
 
@@ -52,8 +54,10 @@ namespace Astro {
 			// remove singleton
 			if (singleton == this) singleton = null;
 
-			// Exits from level if it exists
-			level?.Exit();
+			// Call Exit on world objects
+			player.Exit();
+			bulletManager.Exit();
+			level?.Exit(); /// if it's null then it wont call the function
 		}
 	}
 }

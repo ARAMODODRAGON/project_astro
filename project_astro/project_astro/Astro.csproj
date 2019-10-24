@@ -45,11 +45,12 @@
     <Compile Include="Physics\CircleCollider.cs" />
     <Compile Include="Physics\CollisionData.cs" />
     <Compile Include="Physics\CollsionShape.cs" />
-    <Compile Include="General Classes\BulletManager.cs" />
-    <Compile Include="General Classes\EnemyManager.cs" />
+    <Compile Include="Managers\BulletManager.cs" />
+    <Compile Include="Managers\EnemyManager.cs" />
     <Compile Include="Entities\Entity.cs" />
-    <Compile Include="General Classes\Helper Classes\ContentLoader.cs" />
+    <Compile Include="General Classes\ContentLoader.cs" />
     <Compile Include="Rendering\Sprite.cs" />
+    <Compile Include="Rendering\SpriteSheet.cs" />
     <Compile Include="Rendering\Viewport.cs" />
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Levels\Level1.cs" />
@@ -61,7 +62,7 @@
     <Compile Include="General Classes\TheWorld.cs" />
     <Compile Include="Physics\Transform.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="General Classes\Helper Classes\Debug.cs" />
+    <Compile Include="General Classes\Debug.cs" />
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
