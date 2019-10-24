@@ -2,7 +2,7 @@
 //using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Astro {
+namespace Astro.Rendering {
 	static class Renderer {
 		// Spritebatch & GraphicsDeviceManager
 		public static SpriteBatch SpriteBatch => Game1.singleton.spriteBatch;

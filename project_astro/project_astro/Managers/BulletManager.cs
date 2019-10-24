@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Astro.Rendering;
 
 namespace Astro {
 	//contains all bullet related math
@@ -283,7 +284,7 @@ namespace Astro {
 				switch (Bullets[i].Type) {
 					case BulletType.None: break; /// type of none shouldn't update
 					case BulletType.Basic:
-						if (Viewport.IsOutsideBounds(Bullets[i].Position, Bullets[i].ColSize)) DestroyBullet(i);
+						if (Camera.IsOutsideBounds(Bullets[i].Position, Bullets[i].ColSize)) DestroyBullet(i);
 						break;
 					case BulletType.Basic_Red: goto case BulletType.Basic;
 					case BulletType.Basic_blue: goto case BulletType.Basic;

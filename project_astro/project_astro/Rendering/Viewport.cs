@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Astro.Physics;
 
-namespace Astro {
-	static class Viewport {
+namespace Astro.Rendering {
+	static class Camera {
 		// View matrix
 		public static Matrix ViewMatrix { get; private set; }
 
