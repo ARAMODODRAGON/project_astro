@@ -35,6 +35,8 @@ namespace Astro {
 			box = ContentLoader.Load<Texture2D>("DebugDrawBox");
 		}
 
+		#region Drawing
+
 		public void Render() {
 			DrawEvent drawEvent;
 			Rectangle rect = new Rectangle();
@@ -99,9 +101,11 @@ namespace Astro {
 												(int)(Bottom/ 150f * 900f), 
 												Color.White, outlined));
 		}
+		
+		#endregion
 
 		public static void Log(object obj) {
-			System.Diagnostics.Debug.WriteLine(obj.ToString());
+			System.Console.WriteLine(obj.ToString());
 		}
 
 	}
