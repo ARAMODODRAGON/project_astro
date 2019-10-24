@@ -1,5 +1,5 @@
 ﻿
-namespace project_astro {
+namespace Astro {
 	class EnemyManager {
 	}
 }

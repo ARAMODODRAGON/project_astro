@@ -2,10 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace project_astro {
+namespace Astro {
 	//contains all bullet related math
 	static class BMath {
-		
+
 		public static float AngleToX(float angle) {
 			return (float)-Math.Sin(angle * Math.PI / 180f);
 		}
@@ -33,22 +33,93 @@ namespace project_astro {
 	}
 
 	///creates shortcuts for objects using the BulletManager class
-	static class Bullets {
-		private static int SIZE => BulletManager.SIZE;
-		private static ref int[,] bulletIntData => ref BulletManager.singleton.bulletIntData;
-		private static ref float[,] bulletFloatData => ref BulletManager.singleton.bulletFloatData;
+	struct Bullet {
+		public BulletType Type;
+		public int IntType {
+			get => (int)Type;
+			set => Type = (BulletType)value;
+		}
+		public float TimeSinceAwake;
+		public Vector2 Position;
+		public float XPos {
+			get => Position.X;
+			set => Position.X = value;
+		}
+		public float YPos {
+			get => Position.Y;
+			set => Position.Y = value;
+		}
+		public float Degrees;
+		public float Radians {
+			get => MathHelper.ToRadians(Degrees);
+			set => Degrees = MathHelper.ToDegrees(value);
+		}
+		public float Speed;
+		public Vector2 Velocity {
+			get => new Vector2((float)-Math.Sin(Radians), (float)Math.Cos(Radians)) * Speed;
+			set {
+				Radians = (float)Math.Atan2(value.Y, value.X);
+				Speed = value.Length();
+			}
+		}
+		public int LastCollision;
+		public float ColSize;
+	}
+
+	///the manager for all bullets in game
+	class BulletManager {
+		// singleton
+		public static BulletManager Singleton { get; private set; }
+
+		#region The Bullet List
+
+		// bullet list
+		private const int SIZE = 1024;
+		private Bullet[] Bullets;
+
+		#endregion
+
+		#region Bullet Textures
+
+		private Texture2D bulletDefault;
+
+		#endregion
+
+		#region Initialization
+
+		public void Init() {
+			// set singleton
+			if (Singleton == null) Singleton = this;
+
+			Bullets = new Bullet[SIZE];
+
+			ClearBullets();
+		}
+
+		public static void ClearBullets() {
+			// clears all bullets to BulletType.None
+			for (int i = 0; i < SIZE; ++i) {
+				Singleton.Bullets[i].Type = BulletType.None;
+			}
+		}
+
+		public void LoadContent() {
+			bulletDefault = ContentLoader.Load<Texture2D>("BulletTestSprite");
+		}
+
+		#endregion
 
 		#region Bullet Creation
 
-		private static void SpawnSingleAt(int index, BulletType type, float xpos, float ypos, float speed, float direction, float colRadius) {
-			bulletIntData[index, 0] = (int)type;    /// set the type
-			bulletIntData[index, 1] = -1;           /// set the last collision to -1 to reperesent none
-			bulletFloatData[index, 0] = 0f;         /// set the time since start to 0
-			bulletFloatData[index, 1] = direction;  /// set the direction
-			bulletFloatData[index, 2] = speed;      /// set the initial speed
-			bulletFloatData[index, 3] = colRadius;     /// set the radius
-			bulletFloatData[index, 4] = xpos;       /// set the x position
-			bulletFloatData[index, 5] = ypos;       /// set the y position
+		private static void SpawnSingleAt(int index, BulletType type, float xpos, float ypos, float speed, float angle, float colRadius) {
+			Singleton.Bullets[index].Type = type;    /// set the type
+			Singleton.Bullets[index].LastCollision = -1;           /// set the last collision to -1 to reperesent none
+			Singleton.Bullets[index].TimeSinceAwake = 0f;         /// set the time since awake to 0
+			Singleton.Bullets[index].Degrees = angle;  /// set the direction
+			Singleton.Bullets[index].Speed = speed;      /// set the initial speed
+			Singleton.Bullets[index].ColSize = colRadius;     /// set the radius
+			Singleton.Bullets[index].XPos = xpos;       /// set the x position
+			Singleton.Bullets[index].YPos = ypos;       /// set the y position
 		}
 
 		/// <summary>
@@ -68,7 +139,7 @@ namespace project_astro {
 
 			// first find an unused slot in the array
 			int index = 0;
-			while (index < SIZE && bulletIntData[index, 0] != 0) ++index; /// while index is valid and bullet type is 0 (BulletType.None)
+			while (index < SIZE && Singleton.Bullets[index].Type != 0) ++index; /// while index is valid and bullet type is 0 (BulletType.None)
 			// if there isnt one then return false
 			if (index == SIZE) {
 				Debug.Log("The number of bullets have reached the max count(" + SIZE + ") of" + type);
@@ -108,14 +179,14 @@ namespace project_astro {
 			while (index < SIZE && spawnedCount != count) { /// while the index is valid and hasn't spawned all the bullets
 
 				// when there is an empty slot create a bullet
-				if (bulletIntData[index, 0] == 0) {
+				if (Singleton.Bullets[index].Type == 0) {
 					// set the relative angle of this bullet
 					/// used for the position on the circle
 					/// or for its rotation
 					relangle = anglediff * spawnedCount;
 					// spawn bullet
 					SpawnSingleAt(index, type, BMath.XToWorld(BMath.AngleToX(startingRotation + relangle)) * circleRadius + xCenter,
-						BMath.YToWorld(BMath.AngleToY(startingRotation + relangle)) * circleRadius + yCenter, 
+						BMath.YToWorld(BMath.AngleToY(startingRotation + relangle)) * circleRadius + yCenter,
 						speed, outDirection + relangle + startingRotation, bulletRadius);
 					//increase the number of spawned bullets
 					++spawnedCount;
@@ -154,7 +225,7 @@ namespace project_astro {
 			int spawnedCount = 0;
 			float anglediff = range / count; // distance between bullets
 			float relangle;
-			
+
 			xCenter = BMath.XToWorld(xCenter);
 			yCenter = BMath.YToWorld(yCenter);
 
@@ -162,7 +233,7 @@ namespace project_astro {
 			while (index < SIZE && spawnedCount < count) { /// while the index is valid and hasn't spawned all the bullets
 
 				// when there is an empty slot create a bullet
-				if (bulletIntData[index, 0] == 0) {
+				if (Singleton.Bullets[index].Type == 0) {
 					// set the relative angle of this bullet
 					/// used for the position on the circle
 					/// and for its rotation
@@ -184,120 +255,35 @@ namespace project_astro {
 
 		#endregion
 
-		public static void Clear() {
-			BulletManager.singleton.ClearBullets();
-		}
-
-	}
-
-	///the manager for all bullets in game
-	class BulletManager {
-		// singleton
-		public static BulletManager singleton { get; private set; }
-
-		#region The Bullet List
-
-		// bullet list
-		public const int SIZE = 1024;
-		public int[,] bulletIntData;
-		//  [SIZE, 2]
-		/// [0] = type
-		/// [1] = last collision
-		public float[,] bulletFloatData;
-		//  [SIZE, 6]
-		/// [0] = time since creation
-		/// [1] = direction in degrees
-		/// [2] = speed
-		/// [3] = radius of collider
-		/// [4] = X position
-		/// [5] = Y position
-
-		// accessing bullets by properties
-		/// you would set the index to the bullet you want access to 
-		private int Index = 0;
-		/// then use the properties
-		private ref int Type => ref bulletIntData[Index, 0];
-		private ref int LastEnemy => ref bulletIntData[Index, 1];
-		private ref float TimeSinceStart => ref bulletFloatData[Index, 0];
-		private ref float Direction => ref bulletFloatData[Index, 1];
-		private  float DirectionInRad => bulletFloatData[Index, 1] * (float)Math.PI/180f;
-		private ref float Speed => ref bulletFloatData[Index, 2];
-		private ref float CircleRadius => ref bulletFloatData[Index, 3];
-		private ref float XPos => ref bulletFloatData[Index, 4];
-		private ref float YPos => ref bulletFloatData[Index, 5];
-
-		// accessing bullets by functions
-		//private ref int Type(int index) => ref bulletIntData[index, 0];
-
-		#endregion
-
-		#region Bullet Textures
-
-		private Texture2D bulletDefault;
-
-		#endregion
-
-		#region Initialization
-
-		public void Init() {
-			// set singleton
-			if (singleton == null) singleton = this;
-
-			bulletIntData = new int[SIZE, 2];
-			bulletFloatData = new float[SIZE, 6];
-
-			ClearBullets();
-		}
-
-		public void ClearBullets() {
-			// clears all bullets to 0(BulletType.None)
-			for (Index = 0; Index < SIZE; ++Index) Type = 0;
-		}
-
-		public void LoadContent() {
-			bulletDefault = ContentLoader.Load<Texture2D>("BulletTestSprite");
-		}
-
-		#endregion
-
 		#region Bullet Logic
-
-		private bool IsOutsideBounds() {
-			return XPos > 675 || XPos < -75 || YPos > 875 || YPos < -7;
-		}
 
 		private void DestroyBullet(int index) {
 			// simply by setting the type to 0 (BulletType.None) the bullet is destroyed
-			bulletIntData[index, 0] = 0;
-		}
-
-		private void DestroyBullet() {
-			// simply by setting the type to 0 (BulletType.None) the bullet is destroyed
-			Type = 0;
+			Bullets[index].Type = BulletType.None;
 		}
 
 		public void Update(float delta) {
-			for (Index = 0; Index < SIZE; ++Index) {
-				TimeSinceStart += delta;
+			for (int i = 0; i < SIZE; i++) {
+				Bullets[i].TimeSinceAwake += delta;
 
 				// update each bullet according to type
-				switch ((BulletType)Type) {
+				switch (Bullets[i].Type) {
 					case BulletType.None: break; /// type of none shouldn't update
 					case BulletType.Basic:
 						/// basic bullet requires simple physics
-						XPos += BMath.AngleToX(Direction) * Speed * delta;
-						YPos += BMath.AngleToY(Direction) * Speed * delta;
+						Bullets[i].XPos += Bullets[i].Velocity.X * delta;
+						Bullets[i].YPos += Bullets[i].Velocity.Y * delta;
 						break;
 					case BulletType.Basic_Red: goto case BulletType.Basic;
 					case BulletType.Basic_blue: goto case BulletType.Basic;
-					default: Debug.Log("Couldn't update bullet type: " + (BulletType)Type); break;
+					default: Debug.Log("Couldn't update bullet type: " + Bullets[i].Type); break;
 				}
 
 				// test if bullet should die
-				switch ((BulletType)Type) {
+				switch (Bullets[i].Type) {
 					case BulletType.None: break; /// type of none shouldn't update
 					case BulletType.Basic:
-						if (IsOutsideBounds()) DestroyBullet();
+						if (Viewport.IsOutsideBounds(Bullets[i].Position, Bullets[i].ColSize)) DestroyBullet(i);
 						break;
 					case BulletType.Basic_Red: goto case BulletType.Basic;
 					case BulletType.Basic_blue: goto case BulletType.Basic;
@@ -319,37 +305,27 @@ namespace project_astro {
 			Rectangle rect = new Rectangle();
 			Vector2 origin = new Vector2(75f);
 			// render each bullet
-			for (Index = 0; Index < SIZE; ++Index) {
-				switch ((BulletType)Type) {
+			for (int i = 0; i < SIZE; i++) {
+				//set the rect
+				rect.X = (int)(Bullets[i].XPos);
+				rect.Y = (int)(Bullets[i].YPos);
+				rect.Width = (int)Bullets[i].ColSize;
+				rect.Height = (int)Bullets[i].ColSize;
+				switch (Bullets[i].Type) {
 					case BulletType.None: break;
 					case BulletType.Basic:
-						//set the rect
-						rect.X = (int)(XPos);
-						rect.Y = (int)(YPos);
-						rect.Width = (int)CircleRadius;
-						rect.Height = (int)CircleRadius;
 						//draw the basic bullet using the 'bulletDefault' Texture2D
-						Renderer.Draw(bulletDefault, rect, null, Color.White, DirectionInRad, origin, SpriteEffects.None, 0f);
+						Renderer.NormalDraw(bulletDefault, rect, null, Color.White, Bullets[i].Radians, origin, SpriteEffects.None, 0f);
 						break;
 					case BulletType.Basic_Red:
-						//set the rect
-						rect.X = (int)(XPos);
-						rect.Y = (int)(YPos);
-						rect.Width = (int)CircleRadius;
-						rect.Height = (int)CircleRadius;
 						//draw the basic bullet using the 'bulletDefault' Texture2D
-						Renderer.Draw(bulletDefault, rect, null, Color.Red, DirectionInRad, origin, SpriteEffects.None, 0f);
+						Renderer.NormalDraw(bulletDefault, rect, null, Color.Red, Bullets[i].Radians, origin, SpriteEffects.None, 0f);
 						break;
 					case BulletType.Basic_blue:
-						//set the rect
-						rect.X = (int)(XPos);
-						rect.Y = (int)(YPos);
-						rect.Width = (int)CircleRadius;
-						rect.Height = (int)CircleRadius;
 						//draw the basic bullet using the 'bulletDefault' Texture2D
-						Renderer.Draw(bulletDefault, rect, null, Color.Blue, DirectionInRad, origin, SpriteEffects.None, 0f);
+						Renderer.NormalDraw(bulletDefault, rect, null, Color.Blue, Bullets[i].Radians, origin, SpriteEffects.None, 0f);
 						break;
-					default: Debug.Log("Couldn't render bullet type: " + (BulletType)Type); break;
+					default: Debug.Log("Couldn't render bullet type: " + Bullets[i].Type); break;
 				}
 			}
 		}
@@ -358,7 +334,7 @@ namespace project_astro {
 
 		public void Exit() {
 			//remove singleton
-			if (singleton == this) singleton = null;
+			if (Singleton == this) Singleton = null;
 		}
 	}
 }

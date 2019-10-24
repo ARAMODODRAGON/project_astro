@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace project_astro {
+namespace Astro {
 	class StateMachine<T> where T : Enum {
 		// delegate definitions
 		public delegate void UpdateState(float delta);

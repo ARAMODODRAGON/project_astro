@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 
-namespace project_astro {
+namespace Astro.Levels {
 	class TestLevelA : Level {
 		private float timer1 = 0f;
 		private float timer2 = 0f;
@@ -26,7 +26,7 @@ namespace project_astro {
 			if (!keystate && Keyboard.GetState().IsKeyDown(Keys.Space)) {
 				state++;
 				if (state > 3) state = 0;
-				Bullets.Clear();
+				BulletManager.ClearBullets();
 			}
 			keystate = Keyboard.GetState().IsKeyDown(Keys.Space);
 
@@ -36,8 +36,8 @@ namespace project_astro {
 
 					if (timer1 > 0.2f) {
 						timer1 -= 0.2f;
-						Bullets.SpawnSingle(BulletType.Basic, 50f, 50f, 80f, angle1 + 45f, 20f);
-						Bullets.SpawnSingle(BulletType.Basic, 50f, 50f, 80f, -angle1 - 45f, 20f);
+						BulletManager.SpawnSingle(BulletType.Basic, 50f, 50f, 80f, angle1 + 45f, 20f);
+						BulletManager.SpawnSingle(BulletType.Basic, 50f, 50f, 80f, -angle1 - 45f, 20f);
 						angle1 += 20f;
 					}
 					break;
@@ -47,7 +47,7 @@ namespace project_astro {
 
 					if (timer2 > 0.07f) {
 						timer2 -= 0.07f;
-						Bullets.SpawnCircle(BulletType.Basic, 50f, 50f, 10, 5f, 90f, angle2, 0f, 20f);
+						BulletManager.SpawnCircle(BulletType.Basic, 50f, 50f, 10, 5f, 90f, angle2, 0f, 20f);
 						angle2 += 30f;
 					}
 					break;
@@ -57,7 +57,7 @@ namespace project_astro {
 
 					if (timer3 > 0.6f) {
 						timer3 -= 0.6f;
-						Bullets.SpawnRange(BulletType.Basic_Red, 50f, 50f, 4, 5f, 60f, 90f, angle3, 0f, 20f);
+						BulletManager.SpawnRange(BulletType.Basic_Red, 50f, 50f, 4, 5f, 60f, 90f, angle3, 0f, 20f);
 
 						angle3 += 45;
 					}
@@ -69,7 +69,7 @@ namespace project_astro {
 
 					if (timer4 > 0.2f) {
 						timer4 -= 0.1f;
-						Bullets.SpawnSingle(BulletType.Basic_blue, 50f, 50f, 150f, angle4, 20f);
+						BulletManager.SpawnSingle(BulletType.Basic_blue, 50f, 50f, 150f, angle4, 20f);
 
 						angle4 += 10f;
 					}

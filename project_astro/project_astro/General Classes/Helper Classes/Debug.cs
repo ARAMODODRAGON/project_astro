@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
 using System;
 
-namespace project_astro {
+namespace Astro {
 	class Debug {
 		private struct DrawEvent {
 			public DrawEvent(int Left_, int Right_, int Top_, int Bottom_, Color color_, bool outlined_) {
@@ -48,7 +48,7 @@ namespace project_astro {
 					rect.Width = drawEvent.Right - drawEvent.Left;
 					rect.Height = drawEvent.Top - drawEvent.Bottom;
 
-					Renderer.Draw(box, rect, drawEvent.color);
+					Renderer.NormalDraw(box, rect, drawEvent.color);
 				} else {
 					// Draw Left Side
 					rect.X = drawEvent.Left - 2;
@@ -56,7 +56,7 @@ namespace project_astro {
 					rect.Width = 4;
 					rect.Height = drawEvent.Top - drawEvent.Bottom;
 
-					Renderer.Draw(box, rect, drawEvent.color);
+					Renderer.NormalDraw(box, rect, drawEvent.color);
 					
 					// Draw Right Side
 					rect.X = drawEvent.Right - 2;
@@ -64,7 +64,7 @@ namespace project_astro {
 					rect.Width = 4;
 					rect.Height = drawEvent.Top - drawEvent.Bottom;
 
-					Renderer.Draw(box, rect, drawEvent.color);
+					Renderer.NormalDraw(box, rect, drawEvent.color);
 
 					// Draw Top Side
 					rect.X = drawEvent.Left - 2;
@@ -72,7 +72,7 @@ namespace project_astro {
 					rect.Width = drawEvent.Right - drawEvent.Left;
 					rect.Height = 4;
 
-					Renderer.Draw(box, rect, drawEvent.color);
+					Renderer.NormalDraw(box, rect, drawEvent.color);
 					
 					// Draw Bottom Side
 					rect.X = drawEvent.Left - 2;
@@ -80,7 +80,7 @@ namespace project_astro {
 					rect.Width = drawEvent.Right - drawEvent.Left;
 					rect.Height = 4;
 
-					Renderer.Draw(box, rect, drawEvent.color);
+					Renderer.NormalDraw(box, rect, drawEvent.color);
 				}
 			}
 		}

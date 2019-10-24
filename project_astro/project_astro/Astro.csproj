@@ -42,17 +42,23 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Collision Physics\CircleCollider.cs" />
-    <Compile Include="Collision Physics\CollsionShape.cs" />
+    <Compile Include="Physics\CircleCollider.cs" />
+    <Compile Include="Physics\CollisionData.cs" />
+    <Compile Include="Physics\CollsionShape.cs" />
     <Compile Include="Game Classes\BulletManager.cs" />
     <Compile Include="Game Classes\EnemyManager.cs" />
+    <Compile Include="Game Classes\Entity.cs" />
     <Compile Include="Game Classes\Helper Classes\ContentLoader.cs" />
+    <Compile Include="Game Classes\Helper Classes\Viewport.cs" />
     <Compile Include="Game Classes\Level.cs" />
     <Compile Include="Game Classes\Levels\Level1.cs" />
     <Compile Include="Game Classes\Levels\TestLevelA.cs" />
+    <Compile Include="Game Classes\Levels\TestLevelB.cs" />
+    <Compile Include="Physics\PhysicsTransform.cs" />
     <Compile Include="Game Classes\Player.cs" />
     <Compile Include="Game Classes\StateMachine.cs" />
     <Compile Include="Game Classes\TheWorld.cs" />
+    <Compile Include="Physics\Transform.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Game Classes\Helper Classes\Debug.cs" />
     <Compile Include="Game Classes\Helper Classes\Renderer.cs" />

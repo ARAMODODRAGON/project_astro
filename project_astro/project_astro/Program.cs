@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace project_astro
+namespace Astro
 {
     /// <summary>
     /// The main class.

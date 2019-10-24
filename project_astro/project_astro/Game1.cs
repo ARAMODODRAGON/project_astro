@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace project_astro {
+namespace Astro {
 
 	public class Game1 : Game {
 		public static Game1 singleton { get; private set; }
@@ -27,7 +27,7 @@ namespace project_astro {
 
 		protected override void Initialize() {
 			// set viewport
-			GraphicsDevice.Viewport = new Viewport(-100, 0, 600, 900);
+			GraphicsDevice.Viewport = new Microsoft.Xna.Framework.Graphics.Viewport(-100, 0, 600, 900);
 			graphics.PreferredBackBufferWidth = 600;
 			graphics.PreferredBackBufferHeight = 800;
 			graphics.ApplyChanges();
