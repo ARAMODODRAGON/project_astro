@@ -46,6 +46,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Bullet Classes\Bullet.cs" />
+    <Compile Include="Bullet Classes\BulletData.cs" />
     <Compile Include="Bullet Classes\BulletObject.cs" />
     <Compile Include="General Classes\Input.cs" />
     <Compile Include="GlobalSuppressions.cs" />

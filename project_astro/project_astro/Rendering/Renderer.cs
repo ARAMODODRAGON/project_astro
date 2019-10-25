@@ -74,9 +74,15 @@ namespace Astro.Rendering {
 			SpriteBatch.Draw(texture, Camera.WorldToScreen(transform.Position), sourceRectangle, color, 
 				transform.RotationInRadians, pivot, transform.Scale, effects, layerdepth);
 		}
+		
+		public static void DrawSprite(Texture2D texture, Rectangle? sourceRectangle, Vector2 position, float rotationInRad, Vector2 scale, Vector2 pivot, Color color, 
+			float layerdepth = 0f, SpriteEffects effects = SpriteEffects.None) {
+			SpriteBatch.Draw(texture, Camera.WorldToScreen(position), sourceRectangle, color, 
+				rotationInRad, pivot, scale, effects, layerdepth);
+		}
 
 		public static void DrawSprite(Sprite sprite) {
-			SpriteBatch.Draw(sprite.Texture, Camera.WorldToScreen(sprite.Transform.Position), sprite.SourceRectangle, sprite.spritecolor,
+			SpriteBatch.Draw(sprite.Texture, Camera.WorldToScreen(sprite.Transform.Position), sprite.SourceRectangle, sprite.color,
 				sprite.Transform.RotationInRadians, sprite.Pivot, sprite.Transform.Scale, sprite.Effects, sprite.Layer);
 		}
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using Astro.Rendering;
 
 namespace Astro.Objects.BO {
 	// Contains all bullet related math
@@ -30,12 +29,12 @@ namespace Astro.Objects.BO {
 	class BulletManager {
 		// singleton
 		public static BulletManager Singleton { get; private set; }
-		
-		// The Bullet Object List
+
+		// The BulletObject List
 		private List<BulletObject> objects;
 
-		// Texture
-		private Texture2D bulletDefault;
+		// The BulletData class used to update and render bullets
+		private BulletData bulletData;
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Initialization
@@ -48,18 +47,21 @@ namespace Astro.Objects.BO {
 			// Init bullet object list
 			objects = new List<BulletObject>();
 
+			// Init bullet data objecct
+			bulletData = new BulletData();
+			bulletData.Init();
+
 			ClearBullets();
 		}
 
-		public static void ClearBullets() {
-			// clears all bullets to BulletType.None
-			for (int i = 0; i < Singleton.objects.Count; ++i) {
-				Singleton.objects[i].Clear();
-			}
-		}
-
 		public void LoadContent() {
-			bulletDefault = ContentLoader.Load<Texture2D>("BulletTestSprite");
+			// Load the bullet data content
+			bulletData.LoadContent();
+		}
+		
+		public void Exit() {
+			// Remove singleton
+			if (Singleton == this) Singleton = null;
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,6 +75,14 @@ namespace Astro.Objects.BO {
 		}
 		public void RemoveBulletObject(BulletObject obj) {
 			objects.Remove(obj);
+		}
+		
+		// Clearing bullets
+		public static void ClearBullets() {
+			// Clears all bullets to BulletType.None
+			for (int i = 0; i < Singleton.objects.Count; ++i) {
+				Singleton.objects[i].Clear();
+			}
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -236,49 +246,16 @@ namespace Astro.Objects.BO {
 			}
 		}
 
-		// TODO: write functionality and add player argument
 		public void CollideAgainstPlayer() {
-
+			// TODO: write functionality and add player argument
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		#region Rendering Bullets
+		// Rendering Bullets
 
 		public void Render() {
-			Rectangle rect = new Rectangle();
-			Vector2 origin = new Vector2(75f);
-			// render each bullet
-			for (int i = 0; i < SIZE; i++) {
-				//set the rect
-				rect.X = (int)(bullets[i].XPos);
-				rect.Y = (int)(bullets[i].YPos);
-				rect.Width = (int)bullets[i].ColSize;
-				rect.Height = (int)bullets[i].ColSize;
-				switch (bullets[i].Type) {
-					case BulletType.None: break;
-					case BulletType.Basic:
-						//draw the basic bullet using the 'bulletDefault' Texture2D
-						Renderer.NormalDraw(bulletDefault, rect, null, Color.White, bullets[i].Radians, origin, SpriteEffects.None, 0f);
-						break;
-					case BulletType.Basic_Red:
-						//draw the basic bullet using the 'bulletDefault' Texture2D
-						Renderer.NormalDraw(bulletDefault, rect, null, Color.Red, bullets[i].Radians, origin, SpriteEffects.None, 0f);
-						break;
-					case BulletType.Basic_blue:
-						//draw the basic bullet using the 'bulletDefault' Texture2D
-						Renderer.NormalDraw(bulletDefault, rect, null, Color.Blue, bullets[i].Radians, origin, SpriteEffects.None, 0f);
-						break;
-					default: IO.Debug.Log("Couldn't render bullet type: " + bullets[i].Type); break;
-				}
-			}
+			// TODO: add functionality
 		}
 
-		#endregion
-
-		public void Exit() {
-			//remove singleton
-			if (Singleton == this) Singleton = null;
-		}
 	}
 }

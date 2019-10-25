@@ -26,7 +26,7 @@ namespace Astro.Levels {
 			if (!keystate && Keyboard.GetState().IsKeyDown(Keys.Space)) {
 				state++;
 				if (state > 3) state = 0;
-				BulletManager.ClearBullets();
+				//BulletManager.ClearBullets();
 			}
 			keystate = Keyboard.GetState().IsKeyDown(Keys.Space);
 
@@ -36,8 +36,8 @@ namespace Astro.Levels {
 
 					if (timer1 > 0.2f) {
 						timer1 -= 0.2f;
-						BulletManager.SpawnSingle(BulletType.Basic, 50f, 50f, 80f, angle1 + 45f, 20f);
-						BulletManager.SpawnSingle(BulletType.Basic, 50f, 50f, 80f, -angle1 - 45f, 20f);
+						//BulletManager.SpawnSingle(BulletType.Basic, 50f, 50f, 80f, angle1 + 45f, 20f);
+						//BulletManager.SpawnSingle(BulletType.Basic, 50f, 50f, 80f, -angle1 - 45f, 20f);
 						angle1 += 20f;
 					}
 					break;
@@ -47,7 +47,7 @@ namespace Astro.Levels {
 
 					if (timer2 > 0.07f) {
 						timer2 -= 0.07f;
-						BulletManager.SpawnCircle(BulletType.Basic, 50f, 50f, 10, 5f, 90f, angle2, 0f, 20f);
+						//BulletManager.SpawnCircle(BulletType.Basic, 50f, 50f, 10, 5f, 90f, angle2, 0f, 20f);
 						angle2 += 30f;
 					}
 					break;
@@ -57,7 +57,7 @@ namespace Astro.Levels {
 
 					if (timer3 > 0.6f) {
 						timer3 -= 0.6f;
-						BulletManager.SpawnRange(BulletType.Basic_Red, 50f, 50f, 4, 5f, 60f, 90f, angle3, 0f, 20f);
+						//BulletManager.SpawnRange(BulletType.Basic_Red, 50f, 50f, 4, 5f, 60f, 90f, angle3, 0f, 20f);
 
 						angle3 += 45;
 					}
@@ -69,7 +69,7 @@ namespace Astro.Levels {
 
 					if (timer4 > 0.2f) {
 						timer4 -= 0.1f;
-						BulletManager.SpawnSingle(BulletType.Basic_blue, 50f, 50f, 150f, angle4, 20f);
+						//BulletManager.SpawnSingle(BulletType.Basic_blue, 50f, 50f, 150f, angle4, 20f);
 
 						angle4 += 10f;
 					}

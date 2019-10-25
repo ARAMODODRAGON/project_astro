@@ -15,14 +15,14 @@ namespace Astro.Rendering {
 		public Rectangle SourceRectangle => sourceRectangle;
 
 		// Color modifier
-		public Color spritecolor;
+		public Color color;
 		public float FAlpha {
-			get => spritecolor.A / 255f;
-			set => spritecolor.A = (byte)(value * 255);
+			get => color.A / 255f;
+			set => color.A = (byte)(value * 255);
 		}
 		public byte Alpha {
-			get => spritecolor.A;
-			set => spritecolor.A = value;
+			get => color.A;
+			set => color.A = value;
 		}
 
 		// Pivot & layer
@@ -52,7 +52,7 @@ namespace Astro.Rendering {
 		public Sprite() {
 			// Init variables
 			sourceRectangle = new Rectangle();
-			spritecolor = Color.White;
+			color = Color.White;
 			Pivot = Vector2.Zero;
 			FlipHorizontally = false;
 			FlipVertically = false;
@@ -81,11 +81,11 @@ namespace Astro.Rendering {
 		}
 
 		#endregion
-		
+
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		public void Render() {
-			Renderer.DrawSprite(Texture, sourceRectangle, Transform, Pivot, spritecolor, Layer, Effects);
+			Renderer.DrawSprite(Texture, sourceRectangle, Transform, Pivot, color, Layer, Effects);
 		}
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////

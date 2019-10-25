@@ -14,15 +14,20 @@ namespace Astro.Objects.BO {
 		/// <summary> The maximum number of bullets that can be created by this bullet object </summary>
 		public int Count { get; private set; }
 
+		// Says if enemies should collide with the bullets
+		public bool CollidesWithEnemies { get; set; }
+		public bool DoCollision { get; set; }
+
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Bullet delegates
-		public delegate void BulletUpdateDelegate(ref Bullet bullet);
+		public delegate void BulletDelegate(ref Bullet bullet);
 
 		/// Dictionary for defining bullet delegates
-		private Dictionary<BulletType, BulletUpdateDelegate> bulletUpdateDit;
+		private Dictionary<BulletType, BulletDelegate> bulletUpdateDit;
+		private Dictionary<BulletType, BulletDelegate> bulletRenderDit;
 
 		/// Adding and removing delegates
-		public void AddUpdateDel(BulletType key, BulletUpdateDelegate del) {
+		public void AddUpdateDel(BulletType key, BulletDelegate del) {
 			if (!bulletUpdateDit.ContainsKey(key))
 				bulletUpdateDit.Add(key, del);
 			else IO.Debug.LogError("There is already a delegate keyed by " + key);
@@ -32,18 +37,36 @@ namespace Astro.Objects.BO {
 				bulletUpdateDit.Remove(key);
 			else IO.Debug.LogError("There is no delegate keyed by " + key);
 		}
+		public void AddRenderDel(BulletType key, BulletDelegate del) {
+			if (!bulletRenderDit.ContainsKey(key))
+				bulletRenderDit.Add(key, del);
+			else IO.Debug.LogError("There is already a delegate keyed by " + key);
+		}
+		public void RemoveRenderDel(BulletType key) {
+			if (bulletRenderDit.ContainsKey(key))
+				bulletRenderDit.Remove(key);
+			else IO.Debug.LogError("There is no delegate keyed by " + key);
+		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Constructor & Destructor
 
 		/// <param name="bulletCount"> The Number of bullets to be allocated </param>
-		public BulletObject(int bulletCount) {
+		public BulletObject(int bulletCount, bool collidesWithEnemies = false) {
 			// Add the object
 			bulletManager.AddBulletObject(this);
 
 			// Set the array and count
 			Count = bulletCount;
 			buarray = new Bullet[Count];
+
+			// Set if it should collide with enemies instead of the player
+			CollidesWithEnemies = collidesWithEnemies;
+			DoCollision = true;
+
+			// Create Dictionaries
+			bulletUpdateDit = new Dictionary<BulletType, BulletDelegate>();
+			bulletRenderDit = new Dictionary<BulletType, BulletDelegate>();
 		}
 
 		~BulletObject() {
@@ -68,7 +91,10 @@ namespace Astro.Objects.BO {
 		}
 
 		public void Clear() {
-
+			// Clears the bullets by setting them all to BulletType.None
+			for (int i = 0; i < Count; i++) {
+				buarray[i].Type = BulletType.None;
+			}
 		}
 
 	}
