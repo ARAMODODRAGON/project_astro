@@ -65,10 +65,9 @@ namespace Astro.Rendering {
 		#endregion
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Drawing to a world position and converting to a screen position
+		// Converting from a world position to a screen position then drawing
 
 		#region World Drawing
-		// As in you draw to the world and the position transformed to the screen
 
 		public static void DrawSprite(Texture2D texture, Rectangle? sourceRectangle, Transform transform, Vector2 pivot, Color color, 
 			float layerdepth = 0f, SpriteEffects effects = SpriteEffects.None) {
