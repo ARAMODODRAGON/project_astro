@@ -1,6 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿///using Microsoft.Xna.Framework;
 using Astro.Levels;
 using Astro.Objects;
+using Astro.Objects.BO;
 
 namespace Astro {
 	class TheWorld {

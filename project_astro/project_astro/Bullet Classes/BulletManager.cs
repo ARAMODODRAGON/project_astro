@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Astro.Rendering;
@@ -25,51 +26,35 @@ namespace Astro.Objects.BO {
 
 	}
 
-	/// The bullets enum
-	enum BulletType {
-		None = 0,
-		Basic,
-		Basic_Red,
-		Basic_blue,
-	}
-
-	
-
 	/// The manager for all bullets in game
 	class BulletManager {
 		// singleton
 		public static BulletManager Singleton { get; private set; }
+		
+		// The Bullet Object List
+		private List<BulletObject> objects;
 
-		#region The Bullet List
-
-		// bullet list
-		private const int SIZE = 2048;
-		private Bullet[] Bullets;
-
-		#endregion
-
-		#region Bullet Textures
-
+		// Texture
 		private Texture2D bulletDefault;
 
-		#endregion
-
-		#region Initialization
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// Initialization
 
 		public void Init() {
-			// set singleton
+			// Set singleton
 			if (Singleton == null) Singleton = this;
 			else IO.Debug.LogError("BulletManager Singleton was not null");
 
-			Bullets = new Bullet[SIZE];
+			// Init bullet object list
+			objects = new List<BulletObject>();
 
 			ClearBullets();
 		}
 
 		public static void ClearBullets() {
 			// clears all bullets to BulletType.None
-			for (int i = 0; i < SIZE; ++i) {
-				Singleton.Bullets[i].Type = BulletType.None;
+			for (int i = 0; i < Singleton.objects.Count; ++i) {
+				Singleton.objects[i].Clear();
 			}
 		}
 
@@ -77,19 +62,33 @@ namespace Astro.Objects.BO {
 			bulletDefault = ContentLoader.Load<Texture2D>("BulletTestSprite");
 		}
 
-		#endregion
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// BulletObject handling
 
+		// Adding to / Removing from the list
+		public void AddBulletObject(BulletObject obj) {
+			// Add the bullet object
+			objects.Add(obj);
+
+		}
+		public void RemoveBulletObject(BulletObject obj) {
+			objects.Remove(obj);
+		}
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		/*
 		#region Bullet Creation
 
 		private static void SpawnSingleAt(int index, BulletType type, float xpos, float ypos, float speed, float angle, float colRadius) {
-			Singleton.Bullets[index].Type = type;    /// set the type
-			Singleton.Bullets[index].LastCollision = -1;           /// set the last collision to -1 to reperesent none
-			Singleton.Bullets[index].TimeSinceAwake = 0f;         /// set the time since awake to 0
-			Singleton.Bullets[index].Degrees = angle;  /// set the direction
-			Singleton.Bullets[index].Speed = speed;      /// set the initial speed
-			Singleton.Bullets[index].ColSize = colRadius;     /// set the radius
-			Singleton.Bullets[index].XPos = xpos;       /// set the x position
-			Singleton.Bullets[index].YPos = ypos;       /// set the y position
+			Singleton.bullets[index].Type = type;    /// set the type
+			Singleton.bullets[index].LastCollision = -1;           /// set the last collision to -1 to reperesent none
+			Singleton.bullets[index].TimeSinceAwake = 0f;         /// set the time since awake to 0
+			Singleton.bullets[index].Degrees = angle;  /// set the direction
+			Singleton.bullets[index].Speed = speed;      /// set the initial speed
+			Singleton.bullets[index].ColSize = colRadius;     /// set the radius
+			Singleton.bullets[index].XPos = xpos;       /// set the x position
+			Singleton.bullets[index].YPos = ypos;       /// set the y position
 		}
 
 		/// <summary>
@@ -109,7 +108,7 @@ namespace Astro.Objects.BO {
 
 			// first find an unused slot in the array
 			int index = 0;
-			while (index < SIZE && Singleton.Bullets[index].Type != 0) ++index; /// while index is valid and bullet type is 0 (BulletType.None)
+			while (index < SIZE && Singleton.bullets[index].Type != 0) ++index; /// while index is valid and bullet type is 0 (BulletType.None)
 			// if there isnt one then return false
 			if (index == SIZE) {
 				IO.Debug.Log("The number of bullets have reached the max count(" + SIZE + ") of" + type);
@@ -149,7 +148,7 @@ namespace Astro.Objects.BO {
 			while (index < SIZE && spawnedCount != count) { /// while the index is valid and hasn't spawned all the bullets
 
 				// when there is an empty slot create a bullet
-				if (Singleton.Bullets[index].Type == 0) {
+				if (Singleton.bullets[index].Type == 0) {
 					// set the relative angle of this bullet
 					/// used for the position on the circle
 					/// or for its rotation
@@ -203,7 +202,7 @@ namespace Astro.Objects.BO {
 			while (index < SIZE && spawnedCount < count) { /// while the index is valid and hasn't spawned all the bullets
 
 				// when there is an empty slot create a bullet
-				if (Singleton.Bullets[index].Type == 0) {
+				if (Singleton.bullets[index].Type == 0) {
 					// set the relative angle of this bullet
 					/// used for the position on the circle
 					/// and for its rotation
@@ -224,40 +223,16 @@ namespace Astro.Objects.BO {
 		}
 
 		#endregion
+		*/
 
-		#region Bullet Logic
-
-		private void DestroyBullet(int index) {
-			// simply by setting the type to 0 (BulletType.None) the bullet is destroyed
-			Bullets[index].Type = BulletType.None;
-		}
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// Logic
 
 		public void Update(float delta) {
-			for (int i = 0; i < SIZE; i++) {
-				Bullets[i].TimeSinceAwake += delta;
-
-				// update each bullet according to type
-				switch (Bullets[i].Type) {
-					case BulletType.None: break; /// type of none shouldn't update
-					case BulletType.Basic:
-						/// basic bullet requires simple physics
-						Bullets[i].Position += Bullets[i].Velocity * delta;
-						break;
-					case BulletType.Basic_Red: goto case BulletType.Basic;
-					case BulletType.Basic_blue: goto case BulletType.Basic;
-					default: IO.Debug.Log("Couldn't update bullet type: " + Bullets[i].Type); break;
-				}
-
-				// test if bullet should die
-				switch (Bullets[i].Type) {
-					case BulletType.None: break; /// type of none shouldn't update
-					case BulletType.Basic:
-						if (Camera.IsOutsideBounds(Bullets[i].Position, Bullets[i].ColSize)) DestroyBullet(i);
-						break;
-					case BulletType.Basic_Red: goto case BulletType.Basic;
-					case BulletType.Basic_blue: goto case BulletType.Basic;
-					default: break;
-				}
+			// Update each object
+			for (int i = 0; i < objects.Count; i++) {
+				// Update the bullets within the object
+				// TODO: add bullet update logic
 			}
 		}
 
@@ -266,7 +241,7 @@ namespace Astro.Objects.BO {
 
 		}
 
-		#endregion
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		#region Rendering Bullets
 
@@ -276,25 +251,25 @@ namespace Astro.Objects.BO {
 			// render each bullet
 			for (int i = 0; i < SIZE; i++) {
 				//set the rect
-				rect.X = (int)(Bullets[i].XPos);
-				rect.Y = (int)(Bullets[i].YPos);
-				rect.Width = (int)Bullets[i].ColSize;
-				rect.Height = (int)Bullets[i].ColSize;
-				switch (Bullets[i].Type) {
+				rect.X = (int)(bullets[i].XPos);
+				rect.Y = (int)(bullets[i].YPos);
+				rect.Width = (int)bullets[i].ColSize;
+				rect.Height = (int)bullets[i].ColSize;
+				switch (bullets[i].Type) {
 					case BulletType.None: break;
 					case BulletType.Basic:
 						//draw the basic bullet using the 'bulletDefault' Texture2D
-						Renderer.NormalDraw(bulletDefault, rect, null, Color.White, Bullets[i].Radians, origin, SpriteEffects.None, 0f);
+						Renderer.NormalDraw(bulletDefault, rect, null, Color.White, bullets[i].Radians, origin, SpriteEffects.None, 0f);
 						break;
 					case BulletType.Basic_Red:
 						//draw the basic bullet using the 'bulletDefault' Texture2D
-						Renderer.NormalDraw(bulletDefault, rect, null, Color.Red, Bullets[i].Radians, origin, SpriteEffects.None, 0f);
+						Renderer.NormalDraw(bulletDefault, rect, null, Color.Red, bullets[i].Radians, origin, SpriteEffects.None, 0f);
 						break;
 					case BulletType.Basic_blue:
 						//draw the basic bullet using the 'bulletDefault' Texture2D
-						Renderer.NormalDraw(bulletDefault, rect, null, Color.Blue, Bullets[i].Radians, origin, SpriteEffects.None, 0f);
+						Renderer.NormalDraw(bulletDefault, rect, null, Color.Blue, bullets[i].Radians, origin, SpriteEffects.None, 0f);
 						break;
-					default: IO.Debug.Log("Couldn't render bullet type: " + Bullets[i].Type); break;
+					default: IO.Debug.Log("Couldn't render bullet type: " + bullets[i].Type); break;
 				}
 			}
 		}

@@ -2,6 +2,14 @@
 using Microsoft.Xna.Framework;
 
 namespace Astro.Objects.BO {
+	/// The bullets enum
+	enum BulletType {
+		None = 0,
+		Basic,
+		Basic_Red,
+		Basic_blue,
+	}
+
 	/// Creates shortcuts for objects using the BulletManager class
 	struct Bullet {
 		public BulletType Type;
