@@ -2,6 +2,6 @@
 
 namespace Astro.Physics {
 	struct CollisionData {
-		public CollsionShape OtherCollider { get; private set; }
+		public Collider OtherCollider { get; private set; }
 	}
 }

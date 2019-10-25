@@ -5,7 +5,7 @@ using Astro.Objects;
 namespace Astro {
 	class TheWorld {
 		// singleton
-		public static TheWorld singleton { get; private set; }
+		public static TheWorld Singleton { get; private set; }
 
 		// main world objects
 		private Level level;
@@ -14,11 +14,13 @@ namespace Astro {
 
 		public void Init() {
 			// set singleton
-			if (singleton == null) singleton = this;
+			if (Singleton == null) Singleton = this;
+			else IO.Debug.LogError("TheWorld Singleton was not null");
 
 			// init the main world objects
 			/// player object
 			player = new Player();
+			player.Init();
 
 			/// bullet manager
 			bulletManager = new BulletManager();
@@ -52,7 +54,7 @@ namespace Astro {
 
 		public void Exit() {
 			// remove singleton
-			if (singleton == this) singleton = null;
+			if (Singleton == this) Singleton = null;
 
 			// Call Exit on world objects
 			player.Exit();

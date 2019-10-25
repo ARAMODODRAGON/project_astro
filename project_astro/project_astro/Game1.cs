@@ -8,35 +8,46 @@ namespace Astro {
 	public class Game1 : Game {
 		public static Game1 singleton { get; private set; }
 
-		// rendering
+		// Rendering
 		public GraphicsDeviceManager graphics;
 		public SpriteBatch spriteBatch;
 
-		// the world
+		// The world
 		TheWorld theWorld;
 
-		// debug 
-		Debug debug;
+		// Input/Output 
+		IO.Debug debug;
+		IO.Input input;
+
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		public Game1() {
 			singleton = this;
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
-			debug = new Debug();
+			debug = new IO.Debug();
+			input = new IO.Input();
 			theWorld = new TheWorld();
 		}
 
 		protected override void Initialize() {
-			// set viewport
-			GraphicsDevice.Viewport = new Microsoft.Xna.Framework.Graphics.Viewport(-100, 0, 600, 900);
-			graphics.PreferredBackBufferWidth = 600;
-			graphics.PreferredBackBufferHeight = 800;
+			// Set viewport
+			//GraphicsDevice.Viewport = new Microsoft.Xna.Framework.Graphics.Viewport(0, 0, 1280, 720);
+			graphics.PreferredBackBufferWidth = 1280;
+			graphics.PreferredBackBufferHeight = 720;
 			graphics.ApplyChanges();
 
-			// the world
+			// Set the camera
+			Camera.SetView(Vector3.Zero);
+			Camera.SetProjection(5f, 5f);
+
+			// The world
 			theWorld.Init();
 
-			// call base
+			// Init input
+			input.Init();
+
+			// Call base
 			base.Initialize();
 		}
 
@@ -44,32 +55,47 @@ namespace Astro {
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			// load the world
+			// Load the world
 			theWorld.LoadContent();
 
+			// Load the debug content
 			debug.LoadContent();
 		}
+		protected override void UnloadContent() { }
 
-		protected override void UnloadContent() {
-			// TODO: Unload any non ContentManager content here
-		}
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		bool f11ispressed = false;
 
 		protected override void Update(GameTime gameTime) {
-			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+			// Get inputs
+			input.UpdateInput();
+
+			// Exit if escape is pressed
+			if (Keyboard.GetState().IsKeyDown(Keys.Escape))
 				Exit();
 
-			// update the world
+			if (Keyboard.GetState().IsKeyDown(Keys.F11) && !f11ispressed)
+				graphics.ToggleFullScreen();
+			f11ispressed = Keyboard.GetState().IsKeyDown(Keys.F11);
+
+			// Update the world
 			theWorld.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
+			// Call base
 			base.Update(gameTime);
 		}
+
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		protected override void Draw(GameTime gameTime) {
 			// Start drawing
 			GraphicsDevice.Clear(new Color(0.5f, 0.5f, 0.5f, 1f));
 			Renderer.RenderBegin();
 
+			// Render TheWorld
 			theWorld.Render();
+			// Debug render
 			debug.Render();
 
 			// Stop drawing
@@ -78,8 +104,9 @@ namespace Astro {
 		}
 
 		protected override void EndRun() {
-			// end the world
+			// End the world
 			theWorld.Exit();
+
 
 			base.EndRun();
 		}

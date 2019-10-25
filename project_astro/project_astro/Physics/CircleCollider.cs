@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 
 namespace Astro.Physics {
-	class CircleCollider : CollsionShape {
+	class CircleCollider : Collider {
 		public float radius;
 
 		public CircleCollider() {

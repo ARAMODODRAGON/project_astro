@@ -91,6 +91,7 @@ namespace Astro {
 		public void Init() {
 			// set singleton
 			if (Singleton == null) Singleton = this;
+			else IO.Debug.LogError("BulletManager Singleton was not null");
 
 			Bullets = new Bullet[SIZE];
 
@@ -143,7 +144,7 @@ namespace Astro {
 			while (index < SIZE && Singleton.Bullets[index].Type != 0) ++index; /// while index is valid and bullet type is 0 (BulletType.None)
 			// if there isnt one then return false
 			if (index == SIZE) {
-				Debug.Log("The number of bullets have reached the max count(" + SIZE + ") of" + type);
+				IO.Debug.Log("The number of bullets have reached the max count(" + SIZE + ") of" + type);
 				return false;
 			}
 
@@ -199,7 +200,7 @@ namespace Astro {
 
 			// if it failed to spawn all the bullets return false
 			if (spawnedCount < count) {
-				Debug.Log("Failed to spawn " + (count - spawnedCount) + " in cirle of BulletType: " + type);
+				IO.Debug.Log("Failed to spawn " + (count - spawnedCount) + " in cirle of BulletType: " + type);
 				return false;
 			}
 
@@ -272,12 +273,11 @@ namespace Astro {
 					case BulletType.None: break; /// type of none shouldn't update
 					case BulletType.Basic:
 						/// basic bullet requires simple physics
-						Bullets[i].XPos += Bullets[i].Velocity.X * delta;
-						Bullets[i].YPos += Bullets[i].Velocity.Y * delta;
+						Bullets[i].Position += Bullets[i].Velocity * delta;
 						break;
 					case BulletType.Basic_Red: goto case BulletType.Basic;
 					case BulletType.Basic_blue: goto case BulletType.Basic;
-					default: Debug.Log("Couldn't update bullet type: " + Bullets[i].Type); break;
+					default: IO.Debug.Log("Couldn't update bullet type: " + Bullets[i].Type); break;
 				}
 
 				// test if bullet should die
@@ -326,7 +326,7 @@ namespace Astro {
 						//draw the basic bullet using the 'bulletDefault' Texture2D
 						Renderer.NormalDraw(bulletDefault, rect, null, Color.Blue, Bullets[i].Radians, origin, SpriteEffects.None, 0f);
 						break;
-					default: Debug.Log("Couldn't render bullet type: " + Bullets[i].Type); break;
+					default: IO.Debug.Log("Couldn't render bullet type: " + Bullets[i].Type); break;
 				}
 			}
 		}

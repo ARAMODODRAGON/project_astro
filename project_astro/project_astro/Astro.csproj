@@ -45,6 +45,8 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="General Classes\Input.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Physics\CircleCollider.cs" />
     <Compile Include="Physics\CollisionData.cs" />
     <Compile Include="Physics\CollsionShape.cs" />

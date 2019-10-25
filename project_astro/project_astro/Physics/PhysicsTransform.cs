@@ -6,11 +6,15 @@ namespace Astro.Physics {
 		/// public Vector2 Position
 		/// public Vector2 Scale
 		public Vector2 Velocity;
-		public Vector2 Acceleration;
 
+		// Collider
+		public Collider collider;
+
+		public PhysicsTransform() : base() {
+			Velocity = Vector2.Zero;
+		}
 
 		public void PhysicsUpdate(float delta) {
-			Velocity += Acceleration * delta;
 			Position += Velocity * delta;
 		}
 	}

@@ -1,11 +1,12 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Astro.Physics;
+using Astro.IO;
 
 namespace Astro.Rendering {
 	class Sprite {
 		// Parent transform
-		public Transform ParentTransform { get; private set; }
+		public Transform Transform { get; private set; }
 
 		// Texture
 		public Texture2D Texture { get; private set; }
@@ -13,14 +14,54 @@ namespace Astro.Rendering {
 		private Rectangle sourceRectangle;
 		public Rectangle SourceRectangle => sourceRectangle;
 
+		// Color modifier
+		public Color spritecolor;
+		public float FAlpha {
+			get => spritecolor.A / 255f;
+			set => spritecolor.A = (byte)(value * 255);
+		}
+		public byte Alpha {
+			get => spritecolor.A;
+			set => spritecolor.A = value;
+		}
+
+		// Pivot & layer
+		public Vector2 Pivot;
+		public int Layer;
+
+		// Sprite effects
+		public SpriteEffects Effects {
+			get {
+				if (FlipVertically && FlipHorizontally)
+					return SpriteEffects.FlipVertically | SpriteEffects.FlipHorizontally;
+				else if (FlipVertically)
+					return SpriteEffects.FlipVertically;
+				else if (FlipHorizontally)
+					return SpriteEffects.FlipHorizontally;
+				else
+					return SpriteEffects.None;
+			}
+		}
+		public bool FlipVertically;
+		public bool FlipHorizontally;
+
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		#region Initialization
+
 		public Sprite() {
-			// Init Rectangle
+			// Init variables
 			sourceRectangle = new Rectangle();
+			spritecolor = Color.White;
+			Pivot = Vector2.Zero;
+			FlipHorizontally = false;
+			FlipVertically = false;
+			Layer = 0;
 		}
 
 		public Sprite(Transform parent) : this() {
 			// Set the parent transform
-			ParentTransform = parent;
+			Transform = parent;
 		}
 
 		public bool LoadTexture(string filename) {
@@ -38,5 +79,15 @@ namespace Astro.Rendering {
 			// Return false to say it was not set
 			return false;
 		}
+
+		#endregion
+		
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		public void Render() {
+			Renderer.DrawSprite(Texture, sourceRectangle, Transform, Pivot, spritecolor, Layer, Effects);
+		}
+
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	}
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 
 namespace Astro.Physics {
-	abstract class CollsionShape {
+	abstract class Collider {
 		// The Parent Transform
 		/// <summary>
 		/// The parent transform that the collider is relative to

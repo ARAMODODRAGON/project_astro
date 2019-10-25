@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Astro.Rendering;
 
-namespace Astro {
+namespace Astro.IO {
 	class Debug {
 		private struct DrawEvent {
 			public DrawEvent(int Left_, int Right_, int Top_, int Bottom_, Color color_, bool outlined_) {
@@ -106,6 +106,10 @@ namespace Astro {
 
 		public static void Log(object obj) {
 			System.Console.WriteLine(obj.ToString());
+		}
+		
+		public static void LogError(object obj) {
+			System.Console.WriteLine("[ERROR]" + obj.ToString());
 		}
 
 	}

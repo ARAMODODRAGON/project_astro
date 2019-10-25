@@ -6,7 +6,7 @@ namespace Astro.Levels {
 
 		public Level() {
 			if (singleton == null) singleton = this;
-			else Debug.Log("The level singleton isn't null");
+			else IO.Debug.Log("The level singleton isn't null");
 		}
 
 		~Level() {

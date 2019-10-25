@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Astro.Physics;
+using Astro.Rendering;
+using Astro.IO;
 
 namespace Astro.Objects {
 	class Player : Entity {
@@ -23,8 +24,13 @@ namespace Astro.Objects {
 		public CircleCollider circle;
 
 		// Rendering
-		private Texture2D spriteTexture;
-		private Rectangle spriteRect;
+		private Sprite playersprite;
+
+		// Input shortcuts
+		private bool Up => Input.GetKey("Up");
+		private bool Down => Input.GetKey("Down");
+		private bool Left => Input.GetKey("Left");
+		private bool Right => Input.GetKey("Right");
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Initialization
@@ -33,7 +39,7 @@ namespace Astro.Objects {
 		public Player() : base() {
 			// Init singleton
 			if (Singleton == null) Singleton = this;
-			else Debug.Log("There are multiple players");
+			else PrintError("There are multiple players");
 
 			#region State Machine Init
 
@@ -64,23 +70,48 @@ namespace Astro.Objects {
 			circle.OnCollisionExit = OnCollisionExit;
 
 			#endregion
+
+			// Init sprite|s
+			playersprite = new Sprite(Transform);
 		}
 
+		// Init
 		public override void Init() {
 			Health = 10;
-			Transform.Position = Vector2.Zero;
+			Transform.Position = new Vector2(450f,450f);
+			Transform.Scale = new Vector2(2f);
 			Transform.Velocity = Vector2.Zero;
 			Transform.Acceleration = Vector2.Zero;
 		}
 
+		// Load Content
 		public override void LoadContent() {
-			spriteTexture = ContentLoader.Load<Texture2D>("TestSprite");
+			playersprite.LoadTexture("TestSprite");
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		public override void Update(float delta) {
-			statemachine.Update(delta);
+			if (Up || Down) {
+				Transform.Velocity.Y = 0f;
+				if (Down) Transform.Velocity.Y += 1000f;
+				if (Up) Transform.Velocity.Y -= 1000f;
+			} else {
+				Transform.Velocity.Y = 0f;
+			}
+			if (Right || Left) {
+				Transform.Velocity.X = 0f;
+				if (Right) Transform.Velocity.X += 1000f;
+				if (Left) Transform.Velocity.X -= 1000f;
+			} else {
+				Transform.Velocity.X = 0f;
+			}
+
+			Print((Transform.Velocity));
+
+			Transform.PhysicsUpdate(delta);
+
+			//statemachine.Update(delta);
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -138,7 +169,7 @@ namespace Astro.Objects {
 		// Rendering
 		
 		public override void Render() {
-
+			playersprite.Render();
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
