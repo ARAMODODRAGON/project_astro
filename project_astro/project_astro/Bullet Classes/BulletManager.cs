@@ -58,10 +58,13 @@ namespace Astro.Objects.BO {
 			// Load the bullet data content
 			bulletData.LoadContent();
 		}
-		
+
 		public void Exit() {
 			// Remove singleton
 			if (Singleton == this) Singleton = null;
+
+			// Exit
+			bulletData.Exit();
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,7 +79,7 @@ namespace Astro.Objects.BO {
 		public void RemoveBulletObject(BulletObject obj) {
 			objects.Remove(obj);
 		}
-		
+
 		// Clearing bullets
 		public static void ClearBullets() {
 			// Clears all bullets to BulletType.None
@@ -243,6 +246,14 @@ namespace Astro.Objects.BO {
 			for (int i = 0; i < objects.Count; i++) {
 				// Update the bullets within the object
 				// TODO: add bullet update logic
+
+				// Temp
+				for (int j = 0; j < objects[i].Count; j++) {
+					// if it fails to find a delegate then call update in the BulletData object
+					if (!objects[i].TryCallUpdate(j))
+						bulletData.UpdateBullet(ref objects[i][j]);
+				}
+
 			}
 		}
 
