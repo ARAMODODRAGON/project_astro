@@ -81,7 +81,6 @@ namespace Astro.Objects {
 			Transform.Position = new Vector2(450f,450f);
 			Transform.Scale = new Vector2(2f);
 			Transform.Velocity = Vector2.Zero;
-			Transform.Acceleration = Vector2.Zero;
 		}
 
 		// Load Content
