@@ -1,1 +1,1 @@
-# project_astro
+# Project Astro
