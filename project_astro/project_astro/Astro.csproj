@@ -45,12 +45,14 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Bullet Classes\Bullet.cs" />
+    <Compile Include="Bullet Classes\BulletObject.cs" />
     <Compile Include="General Classes\Input.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Physics\CircleCollider.cs" />
     <Compile Include="Physics\CollisionData.cs" />
     <Compile Include="Physics\Collider.cs" />
-    <Compile Include="Managers\BulletManager.cs" />
+    <Compile Include="Bullet Classes\BulletManager.cs" />
     <Compile Include="Managers\EnemyManager.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="General Classes\ContentLoader.cs" />

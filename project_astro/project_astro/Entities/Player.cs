@@ -97,7 +97,7 @@ namespace Astro.Objects {
 				if (Up) Transform.Velocity.Y -= 1000f;
 			} else {
 				Transform.Velocity.Y = 0f;
-			}
+	d		}
 			if (Right || Left) {
 				Transform.Velocity.X = 0f;
 				if (Right) Transform.Velocity.X += 1000f;
