@@ -78,8 +78,13 @@ namespace Astro.Objects {
 		// Init
 		public override void Init() {
 			Health = 10;
-			Transform.Position = new Vector2(450f,450f);
 			Transform.Scale = new Vector2(2f);
+			ResetPosition();
+		}
+
+		public void ResetPosition() {
+			// Used to reset the position of just the player
+			Transform.Position = new Vector2(450f,450f);
 			Transform.Velocity = Vector2.Zero;
 		}
 

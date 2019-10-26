@@ -4,9 +4,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Astro.Physics;
 
 namespace Astro.Rendering {
-	static class Renderer {
+	class Renderer { 
+
 		// Spritebatch & GraphicsDeviceManager
-		public static SpriteBatch SpriteBatch => Game1.singleton.spriteBatch;
+		public static SpriteBatch SpriteBatch => null;
 		public static GraphicsDeviceManager Graphics => Game1.singleton.graphics;
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

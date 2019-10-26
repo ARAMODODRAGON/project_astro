@@ -12,6 +12,9 @@ namespace Astro {
 		public GraphicsDeviceManager graphics;
 		public SpriteBatch spriteBatch;
 
+		/// Rendering related variables
+		
+
 		// The world
 		TheWorld theWorld;
 
@@ -36,6 +39,9 @@ namespace Astro {
 			graphics.PreferredBackBufferWidth = 1280;
 			graphics.PreferredBackBufferHeight = 720;
 			graphics.ApplyChanges();
+
+			// Disable smoothing
+			
 
 			// Set the camera
 			Camera.SetView(Vector3.Zero);
@@ -91,7 +97,7 @@ namespace Astro {
 		protected override void Draw(GameTime gameTime) {
 			// Start drawing
 			GraphicsDevice.Clear(new Color(0.5f, 0.5f, 0.5f, 1f));
-			Renderer.RenderBegin();
+			Renderer.RenderBegin(SpriteSortMode.FrontToBack);
 
 			// Render TheWorld
 			theWorld.Render();
