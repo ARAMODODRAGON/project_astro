@@ -20,3 +20,4 @@ D:\Documents\~Projects\project_astro\project_astro\project_astro\bin\DesktopGL\A
 D:\Documents\~Projects\project_astro\project_astro\project_astro\obj\Debug\Astro.csproj.CopyComplete
 D:\Documents\~Projects\project_astro\project_astro\project_astro\obj\Debug\Astro.exe
 D:\Documents\~Projects\project_astro\project_astro\project_astro\obj\Debug\Astro.pdb
+D:\Documents\~Projects\project_astro\project_astro\project_astro\bin\DesktopGL\AnyCPU\Debug\Content\TestSprite2.xnb

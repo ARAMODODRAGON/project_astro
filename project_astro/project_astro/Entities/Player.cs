@@ -10,9 +10,9 @@ namespace Astro.Objects {
 
 		// Player state enum
 		public enum PlayerState : byte {
-			Frozen		= 0,
-			Normal		= 1,
-			Slow		= 2,
+			Frozen = 0,
+			Normal = 1,
+			MoveToCenter = 2,
 		}
 		// State machine
 		public StateMachine<PlayerState> statemachine;
@@ -33,6 +33,12 @@ namespace Astro.Objects {
 		private bool Right => Input.GetKey("Right");
 		private bool Shift => Input.GetKey("Shift");
 
+		// Movement constants
+		private const float max_fastspeed = 300f;
+		private const float max_slowspeed = 150f;
+		private const float acceleration = 5000f;
+		private const float deceleration = 10000f;
+
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Initialization
 
@@ -48,20 +54,20 @@ namespace Astro.Objects {
 			statemachine = new StateMachine<PlayerState>();
 			statemachine.SetState(PlayerState.Normal);
 
-			/// Add normal state
+			/// Add Normal state
 			statemachine.AddEntry(PlayerState.Normal, NormalEnter);
 			statemachine.AddUpdate(PlayerState.Normal, NormalUpdate);
 			statemachine.AddExit(PlayerState.Normal, NormalExit);
 
-			/// Add slow state
-			statemachine.AddEntry(PlayerState.Slow, SlowEnter);
-			statemachine.AddUpdate(PlayerState.Slow, SlowUpdate);
-			statemachine.AddExit(PlayerState.Slow, SlowExit);
+			/// Add MoveToCenter state
+			statemachine.AddEntry(PlayerState.MoveToCenter, CenterEnter);
+			statemachine.AddUpdate(PlayerState.MoveToCenter, CenterUpdate);
+			statemachine.AddExit(PlayerState.MoveToCenter, CenterExit);
 
 			#endregion
 
 			#region Collision Init
-			
+
 			// Create Collider
 			circle = new CircleCollider(1f, Transform);
 
@@ -80,7 +86,7 @@ namespace Astro.Objects {
 		public override void Init() {
 			Health = 10;
 			Transform.Scale = new Vector2(1f);
-			playersprite.Pivot = new Vector2(0.5f);
+			playersprite.Pivot = new Vector2(2f, 4f);
 			ResetPosition();
 		}
 
@@ -93,20 +99,27 @@ namespace Astro.Objects {
 
 		// Load Content
 		public override void LoadContent() {
-			playersprite.LoadTexture("TestSprite");
+			playersprite.LoadTexture("TestSprite2");
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		public override void Update(float delta) {
-			
+			statemachine.Update(delta);
+		}
 
-			//Camera.Center = Transform.Position.ToPoint();
-			//Print(Camera.Size + " and " + Transform.Position.ToPoint());
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// Math help
 
-			//statemachine.Update(delta);
-			
-			Transform.PhysicsUpdate(delta);
+		/// <summary>
+		/// If two numbers are close to being equal then it returns true
+		/// </summary>
+		/// <param name="num1"> The first number to compare </param>
+		/// <param name="num2"> The second number to compare </param>
+		/// <param name="percision"> The maximum distance between the two numbers </param>
+		/// <returns></returns>
+		private bool NearlyEqual(float num1, float num2, float percision = 0.01f) { 
+			return System.Math.Abs(num1 - num2) <= percision;
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -119,7 +132,55 @@ namespace Astro.Objects {
 		}
 
 		public void NormalUpdate(float delta) {
+			//Print("{accel*delta = " + (acceleration * delta) + "} {decel*delta = " + (deceleration * delta) + "}");
+			// Do movement
+			/// Grab velocity by reference
+			ref Vector2 vel = ref Transform.Velocity;
+			/// Grab speed(depends on shift) and percision
+			float speed = (Shift ? max_slowspeed : max_fastspeed);
+			float percision = 100f;
 
+			#region movement code
+
+			if (Up != Down) {                                                       ///// if moving Up xor Down
+				if (Up) {															//// if moving up
+					if (NearlyEqual(vel.Y, -speed, percision)) vel.Y = -speed;      /// if moving at the same speed
+					else if (vel.Y > -speed) vel.Y -= acceleration * delta;         /// if moving slower > accelerate
+					else if (vel.Y < -speed) vel.Y += deceleration * delta;         /// if moving faster > decelerate
+				}
+				if (Down) {															//// if moving down
+					if (NearlyEqual(vel.Y, speed, percision)) vel.Y = speed;        /// if moving at the same speed
+					else if (vel.Y < speed) vel.Y += acceleration * delta;          /// if moving slower > accelerate
+					else if (vel.Y > speed) vel.Y -= deceleration * delta;          /// if moving faster > decelerate
+				}
+			} else {                                                                //// if not moving Up or Down
+				if (NearlyEqual(vel.Y, 0f, percision)) vel.Y = 0;                   /// if not moving
+				else if (vel.Y > 0) vel.Y -= deceleration * delta;                  /// if moving down   > decelerate
+				else if (vel.Y < 0) vel.Y += deceleration * delta;                  /// if moving up     > decelerate
+			}
+
+
+			if (Left != Right) {													///// if moving left xor right
+				if (Left) {															//// if moving left
+					if (NearlyEqual(vel.X, -speed, percision)) vel.X = -speed;      /// if moving at the same speed
+					else if (vel.X > -speed) vel.X -= acceleration * delta;         /// if moving slower > accelerate
+					else if (vel.X < -speed) vel.X += deceleration * delta;         /// if moving faster > decelerate
+				}
+				if (Right) {														//// if moving right
+					if (NearlyEqual(vel.X, speed, percision)) vel.X = speed;        /// if moving at the same speed
+					else if (vel.X < speed) vel.X += acceleration * delta;          /// if moving slower > accelerate
+					else if (vel.X > speed) vel.X -= deceleration * delta;          /// if moving faster > decelerate
+				}
+			} else {                                                                //// if not moving Left or Right
+				if (NearlyEqual(vel.X, 0f, percision)) vel.X = 0;                   /// if not moving
+				else if (vel.X > 0) vel.X -= deceleration * delta;                  /// if moving right  > decelerate
+				else if (vel.X < 0) vel.X += deceleration * delta;                  /// if moving left   > decelerate
+			}
+
+			#endregion
+
+			// Do physics
+			Transform.PhysicsUpdate(delta);
 		}
 
 		public void NormalExit(PlayerState to) {
@@ -130,31 +191,31 @@ namespace Astro.Objects {
 
 		#region Slow State
 
-		public void SlowEnter(PlayerState from) {
+		public void CenterEnter(PlayerState from) {
 
 		}
 
-		public void SlowUpdate(float delta) {
+		public void CenterUpdate(float delta) {
 
 		}
 
-		public void SlowExit(PlayerState to) {
+		public void CenterExit(PlayerState to) {
 
 		}
 
 		#endregion
-		
+
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Collision
 
 		private void OnCollisionEnter(ref CollisionData data) {
 
 		}
-		
+
 		private void OnCollisionStay(ref CollisionData data) {
 
 		}
-		
+
 		private void OnCollisionExit(ref CollisionData data) {
 
 		}
@@ -162,7 +223,7 @@ namespace Astro.Objects {
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Rendering
-		
+
 		public override void Render() {
 			playersprite.Render();
 		}

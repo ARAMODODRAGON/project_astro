@@ -49,3 +49,15 @@
 /processorParam:TextureFormat=Color
 /build:../../../Content/Sprites/Test sprites/TestSprite.png;TestSprite.png
 
+#begin ../../../Content/Sprites/Test sprites/TestSprite2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../../../Content/Sprites/Test sprites/TestSprite2.png;TestSprite2.png
+
