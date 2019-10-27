@@ -4,7 +4,7 @@ using Astro.Rendering;
 using Astro.IO;
 
 namespace Astro.Objects {
-	class Player : Entity {
+	class Player : Entity, Interfaces.IScriptable {
 		// Singleton
 		public static Player Singleton { get; private set; }
 

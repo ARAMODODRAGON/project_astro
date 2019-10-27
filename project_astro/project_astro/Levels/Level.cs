@@ -1,7 +1,7 @@
 ﻿
 
 namespace Astro.Levels {
-	abstract class Level {
+	abstract class Level : Interfaces.IScriptable {
 		public static Level singleton { get; private set; }
 
 		public Level() {
@@ -16,6 +16,7 @@ namespace Astro.Levels {
 		public abstract void Init();
 		public abstract void LoadContent();
 		public abstract void Update(float delta);
+		public virtual void Render() { }
 		public abstract void Exit();
 	}
 }

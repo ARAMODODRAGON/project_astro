@@ -26,7 +26,7 @@ namespace Astro.Objects.BO {
 	}
 
 	/// The manager for all bullets in game
-	class BulletManager {
+	class BulletManager : Interfaces.IScriptable {
 		// singleton
 		public static BulletManager Singleton { get; private set; }
 

@@ -2,7 +2,7 @@
 using Astro.IO;
 
 namespace Astro.Objects {
-	class Entity {
+	class Entity : Interfaces.IScriptable {
 		// Active variable
 		public bool IsActive;
 
@@ -15,18 +15,18 @@ namespace Astro.Objects {
 			Transform = new PhysicsTransform();
 		}
 
-		// Inherited functions
-		public virtual void Init() { }
-		public virtual void LoadContent() { }
-		public virtual void Update(float delta) { }
-		public virtual void Render() { }
-		public virtual void Exit() { }
-
 		protected void Print(object obj) {
 			Debug.Log(obj);
 		}
 		protected void PrintError(object obj) {
 			Debug.LogError(obj);
 		}
+
+		// From IScriptable interface
+		public virtual void Init() { }
+		public virtual void LoadContent() { }
+		public virtual void Update(float delta) { }
+		public virtual void Render() { }
+		public virtual void Exit() { }
 	}
 }

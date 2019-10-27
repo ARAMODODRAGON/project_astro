@@ -4,7 +4,7 @@ using Astro.Objects;
 using Astro.Objects.BO;
 
 namespace Astro {
-	class TheWorld {
+	class TheWorld : Interfaces.IScriptable {
 		// singleton
 		public static TheWorld Singleton { get; private set; }
 
