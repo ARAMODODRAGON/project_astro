@@ -4,26 +4,92 @@ using Microsoft.Xna.Framework.Graphics;
 using Astro.Physics;
 
 namespace Astro.Rendering {
-	class Renderer { 
+	class Renderer {
+		// Singleton
+		public static Renderer Singleton { get; private set; }
 
 		// Spritebatch & GraphicsDeviceManager
-		public static SpriteBatch SpriteBatch => null;
-		public static GraphicsDeviceManager Graphics => Game1.singleton.graphics;
+		public SpriteBatch spriteBatch;
+		public GraphicsDeviceManager graphics;
+
+		/// Properties
+		public static SpriteBatch SpriteBatch => Singleton.spriteBatch;
+		public static GraphicsDeviceManager Graphics => Singleton.graphics;
+
+		// SpriteBatch begin settings
+		private SpriteSortMode sortMode;
+		private BlendState blendState;
+		private SamplerState samplerState;
+		private DepthStencilState depthStencilState;
+		private RasterizerState rasterizerState;
+		///private Effect effect;
+
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// Constructor
+
+		public Renderer(Game game) {
+			// Set singleton
+			if (Singleton == null) Singleton = this;
+			else IO.Debug.Log("Renderer Singleton was not null");
+
+			// Create GraphicsDeviceManager
+			graphics = new GraphicsDeviceManager(game);
+			
+			// Set viewport
+			graphics.PreferredBackBufferWidth = 1280;
+			graphics.PreferredBackBufferHeight = 720;
+			graphics.ApplyChanges();
+		}
+
+		public void InitSpriteBatch(GraphicsDevice device) {
+			// Create SpriteBatch
+			spriteBatch = new SpriteBatch(device);
+			
+			// Create SpriteBatch begin settings
+			/// SpriteSortMode
+			sortMode = SpriteSortMode.Deferred;
+
+			/// BlendState
+			blendState = BlendState.AlphaBlend;
+
+			/// SamplerState
+			samplerState = SamplerState.PointClamp;
+
+			/// DepthStencilState
+			depthStencilState = DepthStencilState.None;
+
+			/// RasterizerState
+			rasterizerState = new RasterizerState();
+			rasterizerState.FillMode = FillMode.Solid;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// Instance functions
+
+
+
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// Static functions
+
+		public static void ToggleFullscreen() {
+			Graphics.ToggleFullScreen();
+		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Render Begin/End
 
-		public static void RenderBegin() {
-			SpriteBatch.Begin();
+		// Used by the static RenderBegin to cleanly pass all the variables
+		public void Begin(Matrix? transform = null) {
+			spriteBatch.Begin(sortMode, blendState, samplerState, depthStencilState, rasterizerState, null, transform);
 		}
 
-		public static void RenderBegin(SpriteSortMode sortMode = SpriteSortMode.Deferred, BlendState blendState = null,
+		public void RenderBegin(SpriteSortMode sortMode = SpriteSortMode.Deferred, BlendState blendState = null,
 								 SamplerState samplerState = null, DepthStencilState depthStencilState = null,
 								 RasterizerState rasterizerState = null, Effect effect = null, Matrix? transformMatrix = null) {
 			SpriteBatch.Begin(sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
 		}
 
-		public static void RenderEnd() {
+		public void End() {
 			SpriteBatch.End();
 		}
 		
@@ -68,27 +134,23 @@ namespace Astro.Rendering {
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Converting from a world position to a screen position then drawing
 
-		#region World Drawing
-
 		public static void DrawSprite(Texture2D texture, Rectangle? sourceRectangle, Transform transform, Vector2 pivot, Color color, 
 			float layerdepth = 0f, SpriteEffects effects = SpriteEffects.None) {
-			SpriteBatch.Draw(texture, Camera.WorldToScreen(transform.Position), sourceRectangle, color, 
-				transform.RotationInRadians, pivot, transform.Scale, effects, layerdepth);
+			SpriteBatch.Draw(texture, transform.Position, sourceRectangle, color, 
+				transform.RotationInRadians, pivot * transform.Scale, transform.Scale, effects, layerdepth);
 		}
 		
 		public static void DrawSprite(Texture2D texture, Rectangle? sourceRectangle, Vector2 position, float rotationInRad, Vector2 scale, Vector2 pivot, 
 			Color color, float layerdepth = 0f, SpriteEffects effects = SpriteEffects.None) {
-			SpriteBatch.Draw(texture, Camera.WorldToScreen(position), sourceRectangle, color, 
-				rotationInRad, pivot, scale, effects, layerdepth);
+			SpriteBatch.Draw(texture, position, sourceRectangle, color, 
+				rotationInRad, pivot * scale, scale, effects, layerdepth);
 		}
 
 		public static void DrawSprite(Sprite sprite) {
-			SpriteBatch.Draw(sprite.Texture, Camera.WorldToScreen(sprite.Transform.Position), sprite.SourceRectangle, sprite.color,
-				sprite.Transform.RotationInRadians, sprite.Pivot, sprite.Transform.Scale, sprite.Effects, sprite.Layer);
+			SpriteBatch.Draw(sprite.Texture, sprite.Transform.Position, sprite.SourceRectangle, sprite.color,
+				sprite.Transform.RotationInRadians, sprite.Pivot * sprite.Transform.Scale, sprite.Transform.Scale, sprite.Effects, sprite.Layer);
 		}
 
-		#endregion
-		
 	}
 }
 

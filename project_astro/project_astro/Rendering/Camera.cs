@@ -2,85 +2,81 @@
 using Astro.Physics;
 
 namespace Astro.Rendering {
-	static class Camera {
-		// View matrix
-		private static Matrix ProjectionMatrix;
-		private static Matrix ViewMatrix;
+	class Camera {
+		// Singleton
+		public static Camera Singleton { get; private set; }
 
-		private static float top;
-		private static float bottom;
-		private static float left;
-		private static float right;
-		public static float Top {
-			get => top + Position.X;
-			set => top = value;
+		// Matrix
+		private Matrix transform;
+		/// Property
+		public static Matrix Transform => Singleton.transform;
+
+		// Rect of camera
+		public Rectangle bounds;
+		/// Properties
+		public static Rectangle Bounds => Singleton.bounds;
+		public static Point Position {
+			get => new Point(Singleton.bounds.X, Singleton.bounds.Y);
+			set {
+				Singleton.bounds.X = value.X;
+				Singleton.bounds.Y = value.Y;
+			}
 		}
-		public static float Bottom {
-			get => bottom + Position.X;
-			set => bottom = value;
+		public static Point Size {
+			get => new Point(Singleton.bounds.Width, Singleton.bounds.Height);
+			set {
+				Singleton.bounds.Width = value.X;
+				Singleton.bounds.Height = value.Y;
+			}
 		}
-		public static float Left {
-			get => left + Position.X;
-			set => left = value;
-		}
-		public static float Right {
-			get => right + Position.X;
-			set => right = value;
+		public static Point Center {
+			get => Singleton.bounds.Center;
+			set {
+				Singleton.bounds.X = value.X - (Singleton.bounds.Width / 2);
+				Singleton.bounds.Y = value.Y - (Singleton.bounds.Height / 2);
+			}
 		}
 
-		private static Vector3 Position;
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// Constructor
 
-		public static void SetProjection(float width, float height) {
-			Matrix.CreateOrthographic(width, height, 100, -100, out ProjectionMatrix);
-			left = 0;
-			right = width;
-			top = 0;
-			bottom = height;
+		public Camera(Point position, Point size) {
+			// Set Singleton
+			if (Singleton == null) Singleton = this;
+			else IO.Debug.LogError("Camera Singleton was not null");
+
+			// Set transform
+			SetTransform(position, size);
 		}
 
-		public static void SetView(Vector3 position) {
-			ViewMatrix = Matrix.CreateLookAt(position, Vector3.Forward, Vector3.Up);
-			Position = position;
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// Matrix and bounds
+
+		public void SetTransform(Point position, Point size) {
+			bounds = new Rectangle(position, size);
+			transform = Matrix.CreateOrthographicOffCenter(bounds, 100f, -100f);
+		}
+
+		public void UpdateTransform() {
+			transform = Matrix.CreateOrthographicOffCenter(bounds, 100f, -100f);
 		}
 
 		public static Vector2 WorldToScreen(Vector2 position) {
-			//Vector2 temp = Vector2.Zero;
-			//Vector2.Transform(ref position, ref ViewMatrix, out temp);
-			//Vector2.Transform(ref temp, ref ProjectionMatrix, out position);
-
-			return Vector2.Transform(Vector2.Transform(position, ViewMatrix), ProjectionMatrix);
+			return Vector2.Transform(position, Transform);
 		}
 
-		#region Checking bounds
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// Bound checking
 
 		public static bool IsOutsideBounds(Vector2 point) {
-			return point.X > Right
-				|| point.X < Left
-				|| point.Y > Top
-				|| point.Y < Bottom;
+			return Bounds.Contains(point.ToPoint());
 		}
 
-		public static bool IsOutsideBounds(Vector2 point, Rectangle rect) {
-			return (point.X - rect.Width) > Right
-				|| (point.X + rect.Width) < Left
-				|| (point.Y + rect.Height) > Top
-				|| (point.Y - rect.Height) < Bottom;
+		public static bool IsOutsideBounds(Vector2 position, float extents) {
+			position.X -= extents;
+			position.Y -= extents;
+			return Bounds.Contains(new Rectangle(position.ToPoint(), new Point((int)extents * 2, (int)extents * 2)));
 		}
 
-		public static bool IsOutsideBounds(Vector2 point, CircleCollider circle) {
-			return (point.X - circle.radius) > Right
-				|| (point.X + circle.radius) < Left
-				|| (point.Y + circle.radius) > Top
-				|| (point.Y - circle.radius) < Bottom;
-		}
-
-		public static bool IsOutsideBounds(Vector2 point, float radius) {
-			return (point.X - radius) > Right
-				|| (point.X + radius) < Left
-				|| (point.Y + radius) > Top
-				|| (point.Y - radius) < Bottom;
-		}
-		
-		#endregion
 	}
 }

@@ -31,6 +31,7 @@ namespace Astro.Objects {
 		private bool Down => Input.GetKey("Down");
 		private bool Left => Input.GetKey("Left");
 		private bool Right => Input.GetKey("Right");
+		private bool Shift => Input.GetKey("Shift");
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Initialization
@@ -78,13 +79,15 @@ namespace Astro.Objects {
 		// Init
 		public override void Init() {
 			Health = 10;
-			Transform.Scale = new Vector2(2f);
+			Transform.Scale = new Vector2(1f);
+			playersprite.Pivot = new Vector2(0.5f);
 			ResetPosition();
 		}
 
 		public void ResetPosition() {
 			// Used to reset the position of just the player
-			Transform.Position = new Vector2(450f,450f);
+			//Transform.Position = new Vector2(Camera.Size.X / 2, 700f);
+			Transform.Position = new Vector2(0, 0);
 			Transform.Velocity = Vector2.Zero;
 		}
 
@@ -96,26 +99,14 @@ namespace Astro.Objects {
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		public override void Update(float delta) {
-			if (Up || Down) {
-				Transform.Velocity.Y = 0f;
-				if (Down) Transform.Velocity.Y += 1000f;
-				if (Up) Transform.Velocity.Y -= 1000f;
-			} else {
-				Transform.Velocity.Y = 0f;
-			}
-			if (Right || Left) {
-				Transform.Velocity.X = 0f;
-				if (Right) Transform.Velocity.X += 1000f;
-				if (Left) Transform.Velocity.X -= 1000f;
-			} else {
-				Transform.Velocity.X = 0f;
-			}
+			
 
-			Print((Transform.Velocity));
-
-			Transform.PhysicsUpdate(delta);
+			//Camera.Center = Transform.Position.ToPoint();
+			//Print(Camera.Size + " and " + Transform.Position.ToPoint());
 
 			//statemachine.Update(delta);
+			
+			Transform.PhysicsUpdate(delta);
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
