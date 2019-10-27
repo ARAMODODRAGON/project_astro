@@ -4,13 +4,17 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
+    <File>D:/Documents/~Projects/project_astro/project_astro/project_astro/Content/../../../Content/Sprites/Player/PlayerSprite1.png</File>
     <File>D:/Documents/~Projects/project_astro/project_astro/project_astro/Content/../../../Content/Sprites/Test sprites/BulletTestSprite.png</File>
     <File>D:/Documents/~Projects/project_astro/project_astro/project_astro/Content/../../../Content/Sprites/Test sprites/DebugDrawBox.png</File>
     <File>D:/Documents/~Projects/project_astro/project_astro/project_astro/Content/../../../Content/Sprites/Test sprites/TestSprite.png</File>
+    <File>D:/Documents/~Projects/project_astro/project_astro/project_astro/Content/../../../Content/Sprites/Test sprites/TestSprite2.png</File>
   </SourceFiles>
   <DestFiles>
+    <File>PlayerSprite1.png</File>
     <File>BulletTestSprite.png</File>
     <File>DebugDrawBox.png</File>
     <File>TestSprite.png</File>
+    <File>TestSprite2.png</File>
   </DestFiles>
 </SourceFileCollection>

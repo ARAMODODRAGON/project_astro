@@ -16,6 +16,18 @@ namespace Astro.Rendering {
 		public static SpriteBatch SpriteBatch => Singleton.spriteBatch;
 		public static GraphicsDeviceManager Graphics => Singleton.graphics;
 
+		public static Point BackBufferSize {
+			get => new Point(Graphics.PreferredBackBufferWidth, Graphics.PreferredBackBufferHeight);
+			set {
+				Graphics.PreferredBackBufferWidth = value.X;
+				Graphics.PreferredBackBufferHeight = value.Y;
+			}
+		}
+
+		// Window Settings
+		public static Point windowSize;
+		public static bool IsWindowed { get; private set; }
+
 		// SpriteBatch begin settings
 		private SpriteSortMode sortMode;
 		private BlendState blendState;
@@ -27,24 +39,26 @@ namespace Astro.Rendering {
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Constructor
 
-		public Renderer(Game game) {
+		public Renderer(Game game, Point backBufferSize) {
 			// Set singleton
 			if (Singleton == null) Singleton = this;
 			else IO.Debug.Log("Renderer Singleton was not null");
 
 			// Create GraphicsDeviceManager
 			graphics = new GraphicsDeviceManager(game);
-			
+
 			// Set viewport
-			graphics.PreferredBackBufferWidth = 1280;
-			graphics.PreferredBackBufferHeight = 720;
+			IsWindowed = true;
+			windowSize = backBufferSize;
+			graphics.PreferredBackBufferWidth = windowSize.X;
+			graphics.PreferredBackBufferHeight = windowSize.Y;
 			graphics.ApplyChanges();
 		}
 
 		public void InitSpriteBatch(GraphicsDevice device) {
 			// Create SpriteBatch
 			spriteBatch = new SpriteBatch(device);
-			
+
 			// Create SpriteBatch begin settings
 			/// SpriteSortMode
 			sortMode = SpriteSortMode.Deferred;
@@ -73,6 +87,16 @@ namespace Astro.Rendering {
 
 		public static void ToggleFullscreen() {
 			Graphics.ToggleFullScreen();
+			IsWindowed = !IsWindowed;
+			if (IsWindowed) {
+				Graphics.PreferredBackBufferWidth = windowSize.X;
+				Graphics.PreferredBackBufferHeight = windowSize.Y;
+				Graphics.ApplyChanges();
+			} else {
+				Graphics.PreferredBackBufferWidth = 1920;
+				Graphics.PreferredBackBufferHeight = 1080;
+				Graphics.ApplyChanges();
+			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -92,7 +116,7 @@ namespace Astro.Rendering {
 		public void End() {
 			SpriteBatch.End();
 		}
-		
+
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Drawing directly to screen cooridnates
 
@@ -130,19 +154,24 @@ namespace Astro.Rendering {
 		}
 
 		#endregion
-		
+
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Converting from a world position to a screen position then drawing
 
-		public static void DrawSprite(Texture2D texture, Rectangle? sourceRectangle, Transform transform, Vector2 pivot, Color color, 
+		public static void DrawSprite(Texture2D texture, Rectangle? sourceRectangle, Transform transform, Vector2 pivot, Color color,
 			float layerdepth = 0f, SpriteEffects effects = SpriteEffects.None) {
-			SpriteBatch.Draw(texture, transform.Position, sourceRectangle, color, 
+			SpriteBatch.Draw(texture, transform.Position, sourceRectangle, color,
 				transform.RotationInRadians, pivot * transform.Scale, transform.Scale, effects, layerdepth);
 		}
-		
-		public static void DrawSprite(Texture2D texture, Rectangle? sourceRectangle, Vector2 position, float rotationInRad, Vector2 scale, Vector2 pivot, 
+
+		public static void DrawSprite(Texture2D texture, Rectangle destinationRectangle, Rectangle? sourceRectangle, Color color,
+			float layerdepth = 0f, SpriteEffects effects = SpriteEffects.None) {
+			SpriteBatch.Draw(texture, destinationRectangle, sourceRectangle, color, 0f, Vector2.Zero, effects, layerdepth);
+		}
+
+		public static void DrawSprite(Texture2D texture, Rectangle? sourceRectangle, Vector2 position, float rotationInRad, Vector2 scale, Vector2 pivot,
 			Color color, float layerdepth = 0f, SpriteEffects effects = SpriteEffects.None) {
-			SpriteBatch.Draw(texture, position, sourceRectangle, color, 
+			SpriteBatch.Draw(texture, position, sourceRectangle, color,
 				rotationInRad, pivot * scale, scale, effects, layerdepth);
 		}
 

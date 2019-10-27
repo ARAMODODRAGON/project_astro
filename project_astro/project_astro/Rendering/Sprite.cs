@@ -11,8 +11,8 @@ namespace Astro.Rendering {
 		// Texture
 		public Texture2D Texture { get; private set; }
 		// Source rectangle on the texture
-		private Rectangle sourceRectangle;
-		public Rectangle SourceRectangle => sourceRectangle;
+		private Rectangle? sourceRectangle;
+		public Rectangle? SourceRectangle => sourceRectangle;
 
 		// Color modifier
 		public Color color;
@@ -25,9 +25,11 @@ namespace Astro.Rendering {
 			set => color.A = value;
 		}
 
-		// Pivot & layer
+		// Pivot, layer & destination rectangle
 		public Vector2 Pivot;
 		public int Layer;
+		public Rectangle destinationRectangle;
+		public Rectangle DestinationRectangle => destinationRectangle;
 
 		// Sprite effects
 		public SpriteEffects Effects {
@@ -51,7 +53,8 @@ namespace Astro.Rendering {
 
 		public Sprite() {
 			// Init variables
-			sourceRectangle = new Rectangle();
+			sourceRectangle = null;
+			destinationRectangle = new Rectangle();
 			color = Color.White;
 			Pivot = Vector2.Zero;
 			FlipHorizontally = false;
@@ -70,9 +73,10 @@ namespace Astro.Rendering {
 
 			// Check if the texture was set
 			if (Texture != null) {
-				// Set the source rectangle to the entire image
+				// Set the source and destination rectangles to the entire image
 				sourceRectangle = new Rectangle(0, 0, Texture.Width, Texture.Height);
-
+				destinationRectangle.Width = Texture.Width;
+				destinationRectangle.Height = Texture.Height;
 				// Return true to say it was set
 				return true;
 			}
@@ -85,7 +89,10 @@ namespace Astro.Rendering {
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		public void Render() {
-			Renderer.DrawSprite(Texture, sourceRectangle, Transform, Pivot, color, Layer, Effects);
+			// TODO: add rotation and origin
+			destinationRectangle.X = (int)(Transform.Position.X - Texture.Width * Pivot.X);
+			destinationRectangle.Y = (int)(Transform.Position.Y - Texture.Height * Pivot.Y);
+			Renderer.DrawSprite(Texture, destinationRectangle, sourceRectangle, color, Layer, Effects);
 		}
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////

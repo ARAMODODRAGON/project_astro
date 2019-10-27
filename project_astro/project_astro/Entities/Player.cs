@@ -34,8 +34,8 @@ namespace Astro.Objects {
 		private bool Shift => Input.GetKey("Shift");
 
 		// Movement constants
-		private const float max_fastspeed = 300f;
-		private const float max_slowspeed = 150f;
+		private const float max_fastspeed = 500f;
+		private const float max_slowspeed = 100f;
 		private const float acceleration = 5000f;
 		private const float deceleration = 10000f;
 
@@ -86,7 +86,7 @@ namespace Astro.Objects {
 		public override void Init() {
 			Health = 10;
 			Transform.Scale = new Vector2(1f);
-			playersprite.Pivot = new Vector2(2f, 4f);
+			playersprite.Pivot = new Vector2(0.5f, 0.5f);
 			ResetPosition();
 		}
 
@@ -99,7 +99,7 @@ namespace Astro.Objects {
 
 		// Load Content
 		public override void LoadContent() {
-			playersprite.LoadTexture("TestSprite2");
+			playersprite.LoadTexture("PlayerSprite1");
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

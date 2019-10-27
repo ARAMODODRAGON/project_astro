@@ -23,12 +23,12 @@ namespace Astro {
 
 		public Game1() {
 			singleton = this;
-			renderer = new Renderer(this);
+			renderer = new Renderer(this, new Point(1600, 900));
+			camera = new Camera(new Point(0, 0), new Point(1920, 1080));
 			Content.RootDirectory = "Content";
 			debug = new IO.Debug();
 			input = new IO.Input();
 			theWorld = new TheWorld();
-			camera = new Camera(new Point(0, 0), new Point(1600, 900));
 		}
 
 		protected override void Initialize() {
@@ -80,8 +80,8 @@ namespace Astro {
 		protected override void Draw(GameTime gameTime) {
 			// Start drawing
 			GraphicsDevice.Clear(new Color(0.5f, 0.5f, 0.5f, 1f));
-			//camera.UpdateTransform();
-			renderer.Begin();
+			camera.UpdateTransform();
+			renderer.Begin(Camera.Transform);
 
 			// Render TheWorld
 			theWorld.Render();

@@ -17,10 +17,7 @@ namespace Astro.Rendering {
 		public static Rectangle Bounds => Singleton.bounds;
 		public static Point Position {
 			get => new Point(Singleton.bounds.X, Singleton.bounds.Y);
-			set {
-				Singleton.bounds.X = value.X;
-				Singleton.bounds.Y = value.Y;
-			}
+			set { Singleton.bounds.X = value.X; Singleton.bounds.Y = value.Y; }
 		}
 		public static Point Size {
 			get => new Point(Singleton.bounds.Width, Singleton.bounds.Height);
@@ -36,6 +33,7 @@ namespace Astro.Rendering {
 				Singleton.bounds.Y = value.Y - (Singleton.bounds.Height / 2);
 			}
 		}
+		public static Vector2 WindowToCameraScale => new Vector2(Renderer.BackBufferSize.X / Size.X, Renderer.BackBufferSize.Y / Size.Y);
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Constructor
@@ -54,11 +52,14 @@ namespace Astro.Rendering {
 
 		public void SetTransform(Point position, Point size) {
 			bounds = new Rectangle(position, size);
-			transform = Matrix.CreateOrthographicOffCenter(bounds, 100f, -100f);
+			UpdateTransform();
 		}
 
 		public void UpdateTransform() {
-			transform = Matrix.CreateOrthographicOffCenter(bounds, 100f, -100f);
+			Vector3 scale = new Vector3(Renderer.BackBufferSize.ToVector2(), 0f);
+			scale.X = scale.X / Size.X;
+			scale.Y = scale.Y / Size.Y;
+			transform = Matrix.CreateTranslation(new Vector3(-Position.X, -Position.Y, 0f)) * Matrix.CreateScale(scale);
 		}
 
 		public static Vector2 WorldToScreen(Vector2 position) {

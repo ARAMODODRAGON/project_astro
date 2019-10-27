@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>D:/Documents/~Projects/project_astro/project_astro/project_astro/Content/../../../Content/Sprites/Test sprites/BulletTestSprite.png</SourceFile>
-  <SourceTime>2019-10-21T13:13:45.7752994-04:00</SourceTime>
-  <DestFile>D:/Documents/~Projects/project_astro/project_astro/project_astro/Content/bin/DesktopGL/BulletTestSprite.xnb</DestFile>
-  <DestTime>2019-10-27T01:21:10.3384485-04:00</DestTime>
+  <SourceFile>D:/Documents/~Projects/project_astro/project_astro/project_astro/Content/../../../Content/Sprites/Player/PlayerSprite1.png</SourceFile>
+  <SourceTime>2019-10-27T01:20:44.5714175-04:00</SourceTime>
+  <DestFile>D:/Documents/~Projects/project_astro/project_astro/project_astro/Content/bin/DesktopGL/PlayerSprite1.xnb</DestFile>
+  <DestTime>2019-10-27T01:21:10.2821625-04:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T11:35:54-05:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
