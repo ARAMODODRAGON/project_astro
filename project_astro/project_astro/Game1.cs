@@ -7,7 +7,7 @@ using Astro.AMath;
 namespace Astro {
 
 	public class Game1 : Game {
-		public static Game1 singleton { get; private set; }
+		public static Game1 Singleton { get; private set; }
 
 		// Rendering
 		private Renderer renderer;
@@ -23,10 +23,12 @@ namespace Astro {
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		public Game1() {
-			singleton = this;
+			if (Singleton == null) Singleton = this;
+			else IO.Debug.LogError("Game1 Singlon was not null");
 			//renderer = new Renderer(this, new Point(1600, 900));
 			renderer = new Renderer(this, new Point(1280, 720));
 			camera = new Camera(new Point(0, 0), new Point(1920, 1080));
+			Camera.Center = Point.Zero;
 			Content.RootDirectory = "Content";
 			debug = new IO.Debug();
 			input = new IO.Input();

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Astro.Objects.BO;
 
-namespace Astro.Objects.BO {
+namespace Astro.Managers {
 	/// The manager for all bullets in game
-	class BulletManager : Interfaces.IScriptable {
+	class BulletManager : Manager {
 		// singleton
 		public static BulletManager Singleton { get; private set; }
 
@@ -18,7 +16,7 @@ namespace Astro.Objects.BO {
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Initialization
 
-		public void Init() {
+		public override void Init() {
 			// Set singleton
 			if (Singleton == null) Singleton = this;
 			else IO.Debug.LogError("BulletManager Singleton was not null");
@@ -33,12 +31,12 @@ namespace Astro.Objects.BO {
 			ClearBullets();
 		}
 
-		public void LoadContent() {
+		public override void LoadContent() {
 			// Load the bullet data content
 			bulletData.LoadContent();
 		}
 
-		public void Exit() {
+		public override void Exit() {
 			// Remove singleton
 			if (Singleton == this) Singleton = null;
 
@@ -220,7 +218,7 @@ namespace Astro.Objects.BO {
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Logic
 
-		public void Update(float delta) {
+		public override void Update(float delta) {
 			// Update each object
 			for (int i = 0; i < objects.Count; i++) {
 				// Update the bullets within the object
@@ -229,8 +227,7 @@ namespace Astro.Objects.BO {
 				// Temp
 				for (int j = 0; j < objects[i].Count; j++) {
 					// if it fails to find a delegate then call update in the BulletData object
-					if (!objects[i].TryCallUpdate(j))
-						bulletData.UpdateBullet(ref objects[i][j]);
+					bulletData.UpdateBullet(objects[i]);
 				}
 
 			}
@@ -243,7 +240,7 @@ namespace Astro.Objects.BO {
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Rendering Bullets
 
-		public void Render() {
+		public override void Render() {
 			// TODO: add functionality
 		}
 

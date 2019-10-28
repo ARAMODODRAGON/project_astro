@@ -1,15 +1,11 @@
 ﻿
-namespace Astro {
-	class EnemyManager : Interfaces.IScriptable {
+namespace Astro.Managers {
+	class EnemyManager : Manager {
 
-		public void Init() { }
-
-		public void LoadContent() { }
-
-		public void Render() { }
-
-		public void Update(float delta) { }
-
-		public void Exit() { }
+		public override void Init() { } 
+		public override void LoadContent() { } 
+		public override void Render() { } 
+		public override void Update(float delta) { } 
+		public override void Exit() { }
 	}
 }

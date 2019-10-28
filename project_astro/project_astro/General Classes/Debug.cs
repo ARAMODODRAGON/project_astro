@@ -58,7 +58,7 @@ namespace Astro.IO {
 					rect.Height = drawEvent.Top - drawEvent.Bottom;
 
 					Renderer.NormalDraw(box, rect, drawEvent.color);
-					
+
 					// Draw Right Side
 					rect.X = drawEvent.Right - 2;
 					rect.Y = drawEvent.Bottom - 2;
@@ -74,7 +74,7 @@ namespace Astro.IO {
 					rect.Height = 4;
 
 					Renderer.NormalDraw(box, rect, drawEvent.color);
-					
+
 					// Draw Bottom Side
 					rect.X = drawEvent.Left - 2;
 					rect.Y = drawEvent.Bottom - 2;
@@ -87,29 +87,33 @@ namespace Astro.IO {
 		}
 
 		public static void DrawBox(int Left, int Right, int Top, int Bottom, Color color, bool outlined = false) {
-			drawingEvents.Enqueue(new DrawEvent((int)(Left / 100f * 600f), 
-												(int)(Right/ 100f * 600f), 
-												(int)(Top/ 150f * 900f), 
-												(int)(Bottom/ 150f * 900f), 
+			drawingEvents.Enqueue(new DrawEvent((int)(Left / 100f * 600f),
+												(int)(Right / 100f * 600f),
+												(int)(Top / 150f * 900f),
+												(int)(Bottom / 150f * 900f),
 												color, outlined));
 		}
 
 		public static void DrawBox(int Left, int Right, int Top, int Bottom, bool outlined = false) {
-			drawingEvents.Enqueue(new DrawEvent((int)(Left / 100f * 600f), 
-												(int)(Right/ 100f * 600f), 
-												(int)(Top/ 150f * 900f), 
-												(int)(Bottom/ 150f * 900f), 
+			drawingEvents.Enqueue(new DrawEvent((int)(Left / 100f * 600f),
+												(int)(Right / 100f * 600f),
+												(int)(Top / 150f * 900f),
+												(int)(Bottom / 150f * 900f),
 												Color.White, outlined));
 		}
-		
+
 		#endregion
 
 		public static void Log(object obj) {
+#if DEBUG
 			System.Console.WriteLine(obj.ToString());
+#endif
 		}
-		
+
 		public static void LogError(object obj) {
+#if DEBUG
 			System.Console.WriteLine("[ERROR]" + obj.ToString());
+#endif
 		}
 
 	}

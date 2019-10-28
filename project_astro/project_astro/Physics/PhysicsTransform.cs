@@ -8,7 +8,7 @@ namespace Astro.Physics {
 		public Vector2 Velocity;
 
 		// Collider
-		public Collider collider;
+		public Collider collider = null;
 
 		public PhysicsTransform() : base() {
 			Velocity = Vector2.Zero;

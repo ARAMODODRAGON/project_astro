@@ -5,17 +5,18 @@ using Astro.IO;
 using Astro.AMath;
 
 namespace Astro.Objects {
-	class Player : Entity, Interfaces.IScriptable {
+	class Player : Entity {
 		// Singleton
 		public static Player Singleton { get; private set; }
 
-		// Player state enum
+		// Player state stuff
+		/// Player state enum
 		public enum PlayerState : byte {
 			Frozen = 0,
 			Normal = 1,
 			MoveToCenter = 2,
 		}
-		// State machine
+		/// State machine
 		public StateMachine<PlayerState> statemachine;
 
 		// Other player state variables
@@ -33,6 +34,7 @@ namespace Astro.Objects {
 		private bool Left => Input.GetKey("Left");
 		private bool Right => Input.GetKey("Right");
 		private bool Shift => Input.GetKey("Shift");
+		private bool Shoot => Input.GetKey("Z");
 
 		// Movement constants
 		private const float max_fastspeed = 500f;
@@ -87,7 +89,7 @@ namespace Astro.Objects {
 		public override void Init() {
 			Health = 10;
 			Transform.Scale = new Vector2(1f);
-			playersprite.Pivot = new Vector2(0.5f, 0.5f);
+			playersprite.Origin = new Vector2(0.5f, 0.5f);
 			ResetPosition();
 		}
 
@@ -124,8 +126,7 @@ namespace Astro.Objects {
 		}
 
 		public void NormalUpdate(float delta) {
-			//Print("{accel*delta = " + (acceleration * delta) + "} {decel*delta = " + (deceleration * delta) + "}");
-			// Do movement
+			// Do Movement
 			/// Grab velocity by reference
 			ref Vector2 vel = ref Transform.Velocity;
 			/// Grab speed(depends on shift) and percision
@@ -171,8 +172,11 @@ namespace Astro.Objects {
 
 			#endregion
 
-			// Do physics
+			/// Do physics
 			Transform.PhysicsUpdate(delta);
+
+			// Do Shoot
+
 		}
 
 		public void NormalExit(PlayerState to) {
@@ -181,7 +185,7 @@ namespace Astro.Objects {
 
 		#endregion
 
-		#region Slow State
+		#region Center State
 
 		public void CenterEnter(PlayerState from) {
 
@@ -196,6 +200,9 @@ namespace Astro.Objects {
 		}
 
 		#endregion
+		
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// Non state specific
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Collision

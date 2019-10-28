@@ -50,10 +50,12 @@
     <Compile Include="Bullet Classes\BulletObject.cs" />
     <Compile Include="General Classes\Input.cs" />
     <Compile Include="General Classes\IScriptable.cs" />
+    <Compile Include="Managers\Manager.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Math\BMath.cs" />
     <Compile Include="Math\Radial.cs" />
     <Compile Include="Math\VectorExtention.cs" />
+    <Compile Include="Physics\BulletCollider.cs" />
     <Compile Include="Physics\CircleCollider.cs" />
     <Compile Include="Physics\CollisionData.cs" />
     <Compile Include="Physics\Collider.cs" />
@@ -61,6 +63,7 @@
     <Compile Include="Managers\EnemyManager.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="General Classes\ContentLoader.cs" />
+    <Compile Include="Physics\EntityCollider.cs" />
     <Compile Include="Rendering\Sprite.cs" />
     <Compile Include="Rendering\SpriteSheet.cs" />
     <Compile Include="Rendering\Camera.cs" />

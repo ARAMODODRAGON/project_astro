@@ -10,7 +10,7 @@ namespace Astro {
 
 		// main world objects
 		private Level level;
-		private BulletManager bulletManager;
+		private Managers.BulletManager bulletManager;
 		private Player player;
 
 		public void Init() {
@@ -24,7 +24,7 @@ namespace Astro {
 			player.Init();
 
 			/// bullet manager
-			bulletManager = new BulletManager();
+			bulletManager = new Managers.BulletManager();
 			bulletManager.Init();
 
 			/// test level

@@ -44,53 +44,39 @@ namespace Astro.Objects.BO {
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Check the BulletType and call the corisponding update/render function
 
-		public void UpdateBullet(ref Bullet bullet) {
+		public void UpdateBullet(BulletObject bob) {
 			// Find and call the correct function for this bullet
-			switch (bullet.Type) {
-				case BulletType.None: break; /// Type none should do nothing
-				case BulletType.Basic:
-					UpdateBullet_Basic(ref bullet);
-					break;
-				case BulletType.Basic_Red:
-					UpdateBullet_Basic(ref bullet);
-					break;
-				case BulletType.Basic_blue:
-					UpdateBullet_Basic(ref bullet);
-					break;
-				default:
-					break;
+			for (int i = 0; i < bob.Count; i++) {
+				switch (bob[i].logicType) {
+					case BulletLogic.None: break;
+					case BulletLogic.MoveLinear:
+						UpdateBullet_Linear(ref bob[i]);
+						break;
+					case BulletLogic.MoveRadial:
+						UpdateBullet_Radial(ref bob[i]);
+						break;
+					default:
+						break;
+				}
 			}
 		}
 
 		public void RenderBullet(ref Bullet bullet) {
 			// TODO: add proper functionality
 
-			transform.Position = bullet.cordPos;
+			transform.Position = bullet.position;
 			//transform.RotationInRadians = bullet.radial.rota;
-			
-			switch (bullet.Type) {
-				case BulletType.None: break;
-				case BulletType.Basic:
-					bulletSprite.color = Color.White;
-					bulletSprite.Render();
-					break;
-				case BulletType.Basic_Red:
-					bulletSprite.color = Color.Red;
-					bulletSprite.Render();
-					break;
-				case BulletType.Basic_blue:
-					bulletSprite.color = Color.Blue;
-					bulletSprite.Render();
-					break;
-				default: IO.Debug.Log("Couldn't render bullet type: " + bullet.Type); break;
-			}
 
 		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Update functions
 
-		private static void UpdateBullet_Basic(ref Bullet bullet) {
+		private static void UpdateBullet_Linear(ref Bullet bullet) {
+
+		}
+
+		private static void UpdateBullet_Radial(ref Bullet bullet) {
 
 		}
 

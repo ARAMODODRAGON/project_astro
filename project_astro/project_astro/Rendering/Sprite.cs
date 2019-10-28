@@ -25,8 +25,8 @@ namespace Astro.Rendering {
 			set => color.A = value;
 		}
 
-		// Pivot, layer & destination rectangle
-		public Vector2 Pivot;
+		// Origin, layer & destination rectangle
+		public Vector2 Origin;
 		public int Layer;
 		public Rectangle destinationRectangle;
 		public Rectangle DestinationRectangle => destinationRectangle;
@@ -56,7 +56,7 @@ namespace Astro.Rendering {
 			sourceRectangle = null;
 			destinationRectangle = new Rectangle();
 			color = Color.White;
-			Pivot = Vector2.Zero;
+			Origin = Vector2.Zero;
 			FlipHorizontally = false;
 			FlipVertically = false;
 			Layer = 0;
@@ -90,8 +90,8 @@ namespace Astro.Rendering {
 
 		public void Render() {
 			// TODO: add rotation and origin
-			destinationRectangle.X = (int)(Transform.Position.X - Texture.Width * Pivot.X);
-			destinationRectangle.Y = (int)(Transform.Position.Y - Texture.Height * Pivot.Y);
+			destinationRectangle.X = (int)(Transform.Position.X - Texture.Width * Origin.X);
+			destinationRectangle.Y = (int)(Transform.Position.Y - Texture.Height * Origin.Y);
 			Renderer.DrawSprite(Texture, destinationRectangle, sourceRectangle, color, Layer, Effects);
 		}
 

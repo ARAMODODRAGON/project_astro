@@ -177,7 +177,7 @@ namespace Astro.Rendering {
 
 		public static void DrawSprite(Sprite sprite) {
 			SpriteBatch.Draw(sprite.Texture, sprite.Transform.Position, sprite.SourceRectangle, sprite.color,
-				sprite.Transform.RotationInRadians, sprite.Pivot * sprite.Transform.Scale, sprite.Transform.Scale, sprite.Effects, sprite.Layer);
+				sprite.Transform.RotationInRadians, sprite.Origin * sprite.Transform.Scale, sprite.Transform.Scale, sprite.Effects, sprite.Layer);
 		}
 
 	}
