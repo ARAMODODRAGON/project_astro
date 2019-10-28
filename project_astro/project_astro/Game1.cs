@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Astro.Rendering;
+using Astro.AMath;
 
 namespace Astro {
 
@@ -23,7 +24,8 @@ namespace Astro {
 
 		public Game1() {
 			singleton = this;
-			renderer = new Renderer(this, new Point(1600, 900));
+			//renderer = new Renderer(this, new Point(1600, 900));
+			renderer = new Renderer(this, new Point(1280, 720));
 			camera = new Camera(new Point(0, 0), new Point(1920, 1080));
 			Content.RootDirectory = "Content";
 			debug = new IO.Debug();
@@ -40,6 +42,7 @@ namespace Astro {
 
 			// Call base
 			base.Initialize();
+
 		}
 
 		protected override void LoadContent() {
@@ -92,7 +95,7 @@ namespace Astro {
 			renderer.End();
 			base.Draw(gameTime);
 		}
-		
+
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		protected override void EndRun() {

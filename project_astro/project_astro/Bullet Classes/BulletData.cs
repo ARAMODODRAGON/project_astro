@@ -65,8 +65,8 @@ namespace Astro.Objects.BO {
 		public void RenderBullet(ref Bullet bullet) {
 			// TODO: add proper functionality
 
-			transform.Position = bullet.Position;
-			transform.RotationInRadians = bullet.Radians;
+			transform.Position = bullet.cordPos;
+			//transform.RotationInRadians = bullet.radial.rota;
 			
 			switch (bullet.Type) {
 				case BulletType.None: break;

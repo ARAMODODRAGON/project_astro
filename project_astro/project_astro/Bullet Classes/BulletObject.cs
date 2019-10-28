@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using Microsoft.Xna.Framework;
 
 namespace Astro.Objects.BO {
 	/// Contains a set of bullets
@@ -74,10 +74,20 @@ namespace Astro.Objects.BO {
 				buarray[i].Type = BulletType.None;
 			}
 		}
+
+		#region Spawning
+
+		public void SpawnSingleAt(BulletType type, float direction, float speed, Vector2 position) {
+
+		}
+
 		
+
+		#endregion
+
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Bullet delegate
-		
+
 		// Adding and removing delegates
 		public void AddUpdateDel(BulletType key, BulletDelegate del) {
 			if (!updateDel.ContainsKey(key))

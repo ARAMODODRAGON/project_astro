@@ -4,27 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
 namespace Astro.Objects.BO {
-	// Contains all bullet related math
-	static class BMath {
-
-		public static float AngleToX(float angle) {
-			return (float)-Math.Sin(angle * Math.PI / 180f);
-		}
-
-		public static float AngleToY(float angle) {
-			return (float)Math.Cos(angle * Math.PI / 180f);
-		}
-
-		public static float XToWorld(float x) {
-			return x / 100f * 600f;
-		}
-
-		public static float YToWorld(float y) {
-			return y / 150f * 900f;
-		}
-
-	}
-
 	/// The manager for all bullets in game
 	class BulletManager : Interfaces.IScriptable {
 		// singleton

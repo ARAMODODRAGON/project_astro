@@ -2,6 +2,7 @@
 using Astro.Physics;
 using Astro.Rendering;
 using Astro.IO;
+using Astro.AMath;
 
 namespace Astro.Objects {
 	class Player : Entity, Interfaces.IScriptable {
@@ -105,21 +106,12 @@ namespace Astro.Objects {
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		public override void Update(float delta) {
+
+			Vector2 vector = new Vector2(1, 0);
+			Radial radial = vector.ToRadial();
+			Print(radial + " from " + vector);
+
 			statemachine.Update(delta);
-		}
-
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Math help
-
-		/// <summary>
-		/// If two numbers are close to being equal then it returns true
-		/// </summary>
-		/// <param name="num1"> The first number to compare </param>
-		/// <param name="num2"> The second number to compare </param>
-		/// <param name="percision"> The maximum distance between the two numbers </param>
-		/// <returns></returns>
-		private bool NearlyEqual(float num1, float num2, float percision = 0.01f) { 
-			return System.Math.Abs(num1 - num2) <= percision;
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,39 +134,39 @@ namespace Astro.Objects {
 
 			#region movement code
 
-			if (Up != Down) {                                                       ///// if moving Up xor Down
-				if (Up) {															//// if moving up
-					if (NearlyEqual(vel.Y, -speed, percision)) vel.Y = -speed;      /// if moving at the same speed
-					else if (vel.Y > -speed) vel.Y -= acceleration * delta;         /// if moving slower > accelerate
-					else if (vel.Y < -speed) vel.Y += deceleration * delta;         /// if moving faster > decelerate
+			if (Up != Down) {															///// if moving Up xor Down
+				if (Up) {																//// if moving up
+					if (BMath.NearlyEqual(vel.Y, -speed, percision)) vel.Y = -speed;	/// if moving at the same speed
+					else if (vel.Y > -speed) vel.Y -= acceleration * delta;				/// if moving slower > accelerate
+					else if (vel.Y < -speed) vel.Y += deceleration * delta;				/// if moving faster > decelerate
 				}
-				if (Down) {															//// if moving down
-					if (NearlyEqual(vel.Y, speed, percision)) vel.Y = speed;        /// if moving at the same speed
-					else if (vel.Y < speed) vel.Y += acceleration * delta;          /// if moving slower > accelerate
-					else if (vel.Y > speed) vel.Y -= deceleration * delta;          /// if moving faster > decelerate
+				if (Down) {																//// if moving down
+					if (BMath.NearlyEqual(vel.Y, speed, percision)) vel.Y = speed;		/// if moving at the same speed
+					else if (vel.Y < speed) vel.Y += acceleration * delta;				/// if moving slower > accelerate
+					else if (vel.Y > speed) vel.Y -= deceleration * delta;				/// if moving faster > decelerate
 				}
-			} else {                                                                //// if not moving Up or Down
-				if (NearlyEqual(vel.Y, 0f, percision)) vel.Y = 0;                   /// if not moving
-				else if (vel.Y > 0) vel.Y -= deceleration * delta;                  /// if moving down   > decelerate
-				else if (vel.Y < 0) vel.Y += deceleration * delta;                  /// if moving up     > decelerate
+			} else {																	//// if not moving Up or Down
+				if (BMath.NearlyEqual(vel.Y, 0f, percision)) vel.Y = 0;					/// if not moving
+				else if (vel.Y > 0) vel.Y -= deceleration * delta;						/// if moving down   > decelerate
+				else if (vel.Y < 0) vel.Y += deceleration * delta;						/// if moving up     > decelerate
 			}
 
 
-			if (Left != Right) {													///// if moving left xor right
-				if (Left) {															//// if moving left
-					if (NearlyEqual(vel.X, -speed, percision)) vel.X = -speed;      /// if moving at the same speed
-					else if (vel.X > -speed) vel.X -= acceleration * delta;         /// if moving slower > accelerate
-					else if (vel.X < -speed) vel.X += deceleration * delta;         /// if moving faster > decelerate
+			if (Left != Right) {														///// if moving left xor right
+				if (Left) {																//// if moving left
+					if (BMath.NearlyEqual(vel.X, -speed, percision)) vel.X = -speed;	/// if moving at the same speed
+					else if (vel.X > -speed) vel.X -= acceleration * delta;				/// if moving slower > accelerate
+					else if (vel.X < -speed) vel.X += deceleration * delta;				/// if moving faster > decelerate
 				}
-				if (Right) {														//// if moving right
-					if (NearlyEqual(vel.X, speed, percision)) vel.X = speed;        /// if moving at the same speed
-					else if (vel.X < speed) vel.X += acceleration * delta;          /// if moving slower > accelerate
-					else if (vel.X > speed) vel.X -= deceleration * delta;          /// if moving faster > decelerate
+				if (Right) {															//// if moving right
+					if (BMath.NearlyEqual(vel.X, speed, percision)) vel.X = speed;		/// if moving at the same speed
+					else if (vel.X < speed) vel.X += acceleration * delta;				/// if moving slower > accelerate
+					else if (vel.X > speed) vel.X -= deceleration * delta;				/// if moving faster > decelerate
 				}
-			} else {                                                                //// if not moving Left or Right
-				if (NearlyEqual(vel.X, 0f, percision)) vel.X = 0;                   /// if not moving
-				else if (vel.X > 0) vel.X -= deceleration * delta;                  /// if moving right  > decelerate
-				else if (vel.X < 0) vel.X += deceleration * delta;                  /// if moving left   > decelerate
+			} else {																	//// if not moving Left or Right
+				if (BMath.NearlyEqual(vel.X, 0f, percision)) vel.X = 0;					/// if not moving
+				else if (vel.X > 0) vel.X -= deceleration * delta;						/// if moving right  > decelerate
+				else if (vel.X < 0) vel.X += deceleration * delta;						/// if moving left   > decelerate
 			}
 
 			#endregion
