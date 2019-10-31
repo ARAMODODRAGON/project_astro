@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework; 
+using Microsoft.Xna.Framework;
+using Astro.AMath;
 
-namespace Astro.Objects.BO {
+namespace Astro.Objects.Bullets {
 	/// Contains a set of bullets
 	class BulletObject {
 		// Reference to the Bulletmanager
@@ -20,11 +21,12 @@ namespace Astro.Objects.BO {
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Bullet delegates
-		public delegate void BulletDelegate(ref Bullet bullet);
+		public delegate void UpdateDelegate(ref Bullet bullet, float delta);
+		public delegate void RenderDelegate(ref Bullet bullet);
 
 		/// Dictionary for defining bullet delegates
-		public BulletDelegate UpdateBullet;
-		public BulletDelegate RenderBullet;
+		public UpdateDelegate UpdateBullet = null;
+		public RenderDelegate RenderBullet = null;
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Constructor & Destructor
@@ -74,8 +76,22 @@ namespace Astro.Objects.BO {
 
 		#region Spawning
 
-		public void SpawnSingleAt(BulletFlags type, float direction, float speed, Vector2 position) {
+		public void SpawnSingleAt(BulletLogic logicType, BulletDraw drawType, Radial radial, Vector2 position, Color color) {
+			int index = 0;
+			for (index = 0; index < Count; index++) {
+				if (this[index].logicType == BulletLogic.None) break;
+				else {
+					IO.Debug.Log("Could not spawn bullet");
+					return;
+				}
+			}
 
+			this[index].logicType = logicType;
+			this[index].drawType = drawType;
+			this[index].radial = radial;
+			this[index].position = position;
+			this[index].color = color;
+			this[index].TimeSinceAwake = 0f;
 		}
 
 		

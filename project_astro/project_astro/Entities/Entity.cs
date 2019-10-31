@@ -6,13 +6,33 @@ namespace Astro.Objects {
 		// Active variable
 		public bool IsActive;
 
-		// Transform
-		public PhysicsTransform Transform { get; private set; }
+		// Main Components
+		public PhysicsTransform transform;
+		public CircleCollider collider;
+
+		// Health Components
+		protected readonly float MAX_HEALTH;
+		private float health;
+		protected float Health {
+			get => health;
+			set {
+				if (value > MAX_HEALTH) 
+					health = MAX_HEALTH;
+				if (value < 0) 
+					health = 0f;
+				else 
+					health = value;
+			}
+		}
 
 		// Base Constructor
-		public Entity() {
+		public Entity(float maxHealth) {
+			MAX_HEALTH = maxHealth;
 			IsActive = true;
-			Transform = new PhysicsTransform();
+			transform = new PhysicsTransform();
+			collider = new CircleCollider(1f, transform) {
+				OnCollision = OnCollision
+			};
 		}
 
 		protected void Print(object obj) {
@@ -28,5 +48,9 @@ namespace Astro.Objects {
 		public virtual void Update(float delta) { }
 		public virtual void Render() { }
 		public virtual void Exit() { }
+
+		protected virtual void OnCollision() { }
+
+
 	}
 }

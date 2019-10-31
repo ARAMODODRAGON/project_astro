@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Astro.AMath;
 
-namespace Astro.Objects.BO {
+namespace Astro.Objects.Bullets {
 	/// Bullets enums
 	// Logic type
 	enum BulletLogic {
@@ -38,6 +38,7 @@ namespace Astro.Objects.BO {
 		public BulletDraw drawType;
 		private BulletFlags Flags;
 		public float TimeSinceAwake;
+		public Color color;
 		public Vector2 position;
 		public Vector2 linear;
 		public Radial radial;

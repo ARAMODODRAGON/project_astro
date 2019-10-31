@@ -1,4 +1,4 @@
-﻿using Astro.Objects.BO;
+﻿using Astro.Objects.Bullets;
 using Astro.Objects;
 
 namespace Astro.Physics {
@@ -12,20 +12,6 @@ namespace Astro.Physics {
 			this.bObject = bObject;
 		}
 
-		public bool DoesOverlap(int bullet, Entity entity) {
-			switch (bObject[bullet].logicType) {
-				case BulletFlags.Basic:
-
-					break;
-				case BulletFlags.Basic_Red:
-					break;
-				case BulletFlags.Basic_blue:
-					break;
-				default:
-					break;
-			}
-
-			return false;
-		}
+		
 	}
 }

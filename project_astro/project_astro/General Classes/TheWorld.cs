@@ -1,7 +1,7 @@
 ﻿///using Microsoft.Xna.Framework;
 using Astro.Levels;
 using Astro.Objects;
-using Astro.Objects.BO;
+using Astro.Objects.Bullets;
 
 namespace Astro {
 	class TheWorld : Interfaces.IScriptable {
@@ -12,6 +12,7 @@ namespace Astro {
 		private Level level;
 		private Managers.BulletManager bulletManager;
 		private Player player;
+		private EntityManager entityManager;
 
 		public void Init() {
 			// set singleton
@@ -19,13 +20,17 @@ namespace Astro {
 			else IO.Debug.LogError("TheWorld Singleton was not null");
 
 			// init the main world objects
-			/// player object
-			player = new Player();
-			player.Init();
-
 			/// bullet manager
 			bulletManager = new Managers.BulletManager();
 			bulletManager.Init();
+			
+			/// EntityManager
+			entityManager = new EntityManager();
+			entityManager.Init();
+
+			/// player object
+			player = new Player();
+			player.Init();
 
 			/// test level
 			level = new TestLevelB();
@@ -58,9 +63,10 @@ namespace Astro {
 			if (Singleton == this) Singleton = null;
 
 			// Call Exit on world objects
-			player.Exit();
-			bulletManager.Exit();
 			level?.Exit(); /// if it's null then it wont call the function
+			player.Exit();
+			entityManager.Exit();
+			bulletManager.Exit();
 		}
 	}
 }

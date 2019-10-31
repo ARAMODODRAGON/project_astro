@@ -1,7 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
+using Astro.Objects.Bullets;
 
 namespace Astro.Physics {
 	struct CollisionData {
-		public Collider OtherCollider { get; private set; }
+		public CollisionData(BulletFlags flags) {
+			Flags = flags;
+		}
+		public BulletFlags Flags { get; }
 	}
 }

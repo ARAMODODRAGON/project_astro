@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Astro.Objects.BO;
+using Astro.Objects.Bullets;
 
 namespace Astro.Managers {
 	/// The manager for all bullets in game
@@ -8,7 +8,7 @@ namespace Astro.Managers {
 		public static BulletManager Singleton { get; private set; }
 
 		// The BulletObject List
-		private List<BulletObject> objects;
+		private List<BulletObject> bObjects;
 
 		// The BulletData class used to update and render bullets
 		private BulletData bulletData;
@@ -22,7 +22,7 @@ namespace Astro.Managers {
 			else IO.Debug.LogError("BulletManager Singleton was not null");
 
 			// Init bullet object list
-			objects = new List<BulletObject>();
+			bObjects = new List<BulletObject>();
 
 			// Init bullet data objecct
 			bulletData = new BulletData();
@@ -37,11 +37,13 @@ namespace Astro.Managers {
 		}
 
 		public override void Exit() {
-			// Remove singleton
-			if (Singleton == this) Singleton = null;
-
 			// Exit
 			bulletData.Exit();
+		}
+
+		~BulletManager() {
+			// Remove singleton
+			if (Singleton == this) Singleton = null;
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,22 +52,20 @@ namespace Astro.Managers {
 		// Adding to / Removing from the list
 		public void AddBulletObject(BulletObject obj) {
 			// Add the bullet object
-			objects.Add(obj);
+			bObjects.Add(obj);
 
 		}
 		public void RemoveBulletObject(BulletObject obj) {
-			objects.Remove(obj);
+			bObjects.Remove(obj);
 		}
 
 		// Clearing bullets
 		public static void ClearBullets() {
 			// Clears all bullets to BulletType.None
-			for (int i = 0; i < Singleton.objects.Count; ++i) {
-				Singleton.objects[i].Clear();
+			for (int i = 0; i < Singleton.bObjects.Count; ++i) {
+				Singleton.bObjects[i].Clear();
 			}
 		}
-
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		/*
 		#region Bullet Creation
@@ -220,16 +220,15 @@ namespace Astro.Managers {
 
 		public override void Update(float delta) {
 			// Update each object
-			for (int i = 0; i < objects.Count; i++) {
-				// Update the bullets within the object
-				// TODO: add bullet update logic
-
-				// Temp
-				for (int j = 0; j < objects[i].Count; j++) {
-					// if it fails to find a delegate then call update in the BulletData object
-					bulletData.UpdateBullet(objects[i]);
+			for (int i = 0; i < bObjects.Count; i++) {
+				// if it fails to find a delegate then call update in the BulletData object
+				if (bObjects[i].UpdateBullet == null)
+					bulletData.UpdateBullet(bObjects[i], delta);
+				else {
+					for (int j = 0; j < bObjects[i].Count; j++) {
+						bObjects[i].UpdateBullet.Invoke(ref bObjects[i][j], delta);
+					}
 				}
-
 			}
 		}
 
@@ -241,7 +240,24 @@ namespace Astro.Managers {
 		// Rendering Bullets
 
 		public override void Render() {
-			// TODO: add functionality
+			for (int i = 0; i < bObjects.Count; i++) {
+				if (bObjects[i].RenderBullet == null) {
+					bulletData.RenderBullet(bObjects[i]);
+				} else {
+					for (int j = 0; j < bObjects[i].Count; j++) {
+						bObjects[i].RenderBullet.Invoke(ref bObjects[i][j]);
+					}
+				}
+			}
+		}
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// Collision
+
+		public void DoCollision() {
+			for (int i = 0; i < bObjects.Count; i++) {
+				Objects.EntityManager.Singleton.DoCollisionsWithBullets(bObjects[i]);
+			}
 		}
 
 	}

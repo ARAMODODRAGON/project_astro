@@ -3,6 +3,7 @@ using Astro.Physics;
 using Astro.Rendering;
 using Astro.IO;
 using Astro.AMath;
+using Astro.Objects.Bullets;
 
 namespace Astro.Objects {
 	class Player : Entity {
@@ -19,14 +20,13 @@ namespace Astro.Objects {
 		/// State machine
 		public StateMachine<PlayerState> statemachine;
 
-		// Other player state variables
-		public int Health { get; private set; }
-
-		// Player physics variables
-		public CircleCollider circle;
-
 		// Rendering
 		private Sprite playersprite;
+
+		// Bullets
+		BulletObject bObject;
+		private float shootTimer;
+		private const float shootDelay = 0.1f;
 
 		// Input shortcuts
 		private bool Up => Input.GetKey("Up");
@@ -46,10 +46,7 @@ namespace Astro.Objects {
 		// Initialization
 
 		// Constriuctor that calls Base
-		public Player() : base() {
-			// Init singleton
-			if (Singleton == null) Singleton = this;
-			else PrintError("There are multiple players");
+		public Player() : base(100) {
 
 			#region State Machine Init
 
@@ -69,35 +66,37 @@ namespace Astro.Objects {
 
 			#endregion
 
-			#region Collision Init
-
-			// Create Collider
-			circle = new CircleCollider(1f, Transform);
-
-			// Set collision callbacks
-			circle.OnCollisionEnter = OnCollisionEnter;
-			circle.OnCollisionStay = OnCollisionStay;
-			circle.OnCollisionExit = OnCollisionExit;
-
-			#endregion
-
 			// Init sprite|s
-			playersprite = new Sprite(Transform);
+			playersprite = new Sprite(transform);
 		}
 
 		// Init
 		public override void Init() {
-			Health = 10;
-			Transform.Scale = new Vector2(1f);
+			// Init singleton
+			if (Singleton == null) Singleton = this;
+			else PrintError("There are multiple players");
+
+			Health = 10f;
+			shootTimer = 0f;
+			transform.Scale = new Vector2(1f);
 			playersprite.Origin = new Vector2(0.5f, 0.5f);
 			ResetPosition();
+			bObject = new Bullets.BulletObject(256, true);
+			
+			EntityManager.Singleton.SetPlayer(this);
+		}
+		
+		public override void Exit() {
+			if (Singleton == this) Singleton = null;
+
+			EntityManager.Singleton.RemovePlayer();
 		}
 
 		public void ResetPosition() {
 			// Used to reset the position of just the player
 			//Transform.Position = new Vector2(Camera.Size.X / 2, 700f);
-			Transform.Position = new Vector2(0, 0);
-			Transform.Velocity = Vector2.Zero;
+			transform.Position = new Vector2(0, 0);
+			transform.Velocity = Vector2.Zero;
 		}
 
 		// Load Content
@@ -108,11 +107,6 @@ namespace Astro.Objects {
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		public override void Update(float delta) {
-
-			Vector2 vector = new Vector2(1, 0);
-			Radial radial = vector.ToRadial();
-			Print(radial + " from " + vector);
-
 			statemachine.Update(delta);
 		}
 
@@ -128,7 +122,7 @@ namespace Astro.Objects {
 		public void NormalUpdate(float delta) {
 			// Do Movement
 			/// Grab velocity by reference
-			ref Vector2 vel = ref Transform.Velocity;
+			ref Vector2 vel = ref transform.Velocity;
 			/// Grab speed(depends on shift) and percision
 			float speed = (Shift ? max_slowspeed : max_fastspeed);
 			float percision = 100f;
@@ -173,10 +167,15 @@ namespace Astro.Objects {
 			#endregion
 
 			/// Do physics
-			Transform.PhysicsUpdate(delta);
+			transform.PhysicsUpdate(delta);
 
 			// Do Shoot
+			if (Shoot) shootTimer += delta;
+			if (shootTimer > shootDelay) {
+				shootTimer -= shootDelay;
 
+				bObject.SpawnSingleAt(BulletLogic.MoveLinear, BulletDraw.Circle, Radial.UP, transform.Position, Color.White);
+			}
 		}
 
 		public void NormalExit(PlayerState to) {
@@ -200,25 +199,18 @@ namespace Astro.Objects {
 		}
 
 		#endregion
-		
+
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Non state specific
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Collision
 
-		private void OnCollisionEnter(ref CollisionData data) {
+		protected override void OnCollision() {
+			base.OnCollision();
+
 
 		}
-
-		private void OnCollisionStay(ref CollisionData data) {
-
-		}
-
-		private void OnCollisionExit(ref CollisionData data) {
-
-		}
-
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Rendering
@@ -228,10 +220,5 @@ namespace Astro.Objects {
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Exit
-
-		public override void Exit() {
-
-		}
 	}
 }

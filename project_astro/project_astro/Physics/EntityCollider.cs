@@ -26,11 +26,9 @@ namespace Astro.Physics {
 
 		// Collision Callback
 		/// Delegate definition
-		public delegate void CollisionCallBackDelegate(ref CollisionData data);
+		public delegate void CollisionCallBackDelegate();
 		/// Delegate decleration
-		public CollisionCallBackDelegate OnCollisionEnter;
-		public CollisionCallBackDelegate OnCollisionStay;
-		public CollisionCallBackDelegate OnCollisionExit;
+		public CollisionCallBackDelegate OnCollision;
 
 		public void SetParent(Transform parent) {
 			Parent = parent;

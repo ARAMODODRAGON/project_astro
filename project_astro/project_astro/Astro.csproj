@@ -48,6 +48,8 @@
     <Compile Include="Bullet Classes\Bullet.cs" />
     <Compile Include="Bullet Classes\BulletData.cs" />
     <Compile Include="Bullet Classes\BulletObject.cs" />
+    <Compile Include="Entities\Enemy.cs" />
+    <Compile Include="Entities\EntityManager.cs" />
     <Compile Include="General Classes\Input.cs" />
     <Compile Include="General Classes\IScriptable.cs" />
     <Compile Include="Managers\Manager.cs" />
